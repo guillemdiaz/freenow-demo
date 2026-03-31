@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -43,6 +44,12 @@ android {
 
 ksp {
     arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
+}
+
+ktlint {
+    android.set(true)
+    ignoreFailures.set(false)
+    outputToConsole.set(true)
 }
 
 dependencies {
