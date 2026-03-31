@@ -1,4 +1,4 @@
-package com.example.freenowdemo.ui.theme
+package com.example.freenowdemo.core.designsystem.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
