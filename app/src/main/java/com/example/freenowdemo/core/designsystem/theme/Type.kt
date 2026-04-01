@@ -1,4 +1,4 @@
-package com.example.freenowdemo.ui.theme
+package com.example.freenowdemo.core.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -30,5 +30,5 @@ val Typography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-    */
+     */
 )

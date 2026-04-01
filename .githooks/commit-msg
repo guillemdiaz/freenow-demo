@@ -1,0 +1,15 @@
+#!/bin/sh
+# Grab only the first line of the commit message
+subject_line=$(head -n1 "$1")
+# Check Conventional Commits pattern on the subject line
+pattern="^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+\))?: .+"
+if ! echo "$subject_line" | grep -qE "$pattern"; then
+  echo "Invalid commit format. Use: type(scope): description"
+  exit 1
+fi
+# Check length of the subject line only (max 72 chars)
+if [ ${#subject_line} -gt 72 ]; then
+  echo "Commit subject line too long (max 72 chars). Yours is ${#subject_line} chars."
+  exit 1
+fi
+exit 0

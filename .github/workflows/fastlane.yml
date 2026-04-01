@@ -1,0 +1,20 @@
+name: fastlane
+on:
+  workflow_dispatch:
+jobs:
+  fastlane:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "zulu"
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+          bundler-cache: true
+      - name: Install Fastlane
+        run: gem install fastlane
+      - name: Run Fastlane beta
+        run: fastlane beta
