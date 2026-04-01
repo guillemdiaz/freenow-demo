@@ -1,8 +1,7 @@
 # Android
 *.iml
 .gradle/
-/local.properties
-/build/
+build/
 /captures/
 .externalNativeBuild/
 .cxx/
@@ -15,6 +14,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /.idea/git_toolbox_prj.xml
+.idea/
 
 # OS
 .DS_Store
@@ -27,6 +27,13 @@ Thumbs.db
 *.jks
 *.keystore
 
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
 # Local env / secrets
+secrets.properties
 local.properties
 *.env
