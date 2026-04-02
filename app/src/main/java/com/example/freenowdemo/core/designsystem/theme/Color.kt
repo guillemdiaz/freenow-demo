@@ -1,7 +1,7 @@
 package com.example.freenowdemo.core.designsystem.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF8F4A4F)
+val primaryLight = Color(0xFFE80045)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFDADA)
 val onPrimaryContainerLight = Color(0xFF723338)

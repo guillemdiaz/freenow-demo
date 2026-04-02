@@ -12,12 +12,16 @@ kotlin = "2.3.20"
 composeBom = "2026.03.01"
 ktlint = "14.2.0"
 mapsCompose = "8.2.2"
+materialIconsExtended = "1.7.8"
+navigationCompose = "2.9.7"
 places = "5.1.1"
 playServicesMaps = "20.0.0"
 secrets = "2.0.1"
 
 [libraries]
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

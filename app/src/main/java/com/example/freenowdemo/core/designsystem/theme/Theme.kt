@@ -251,7 +251,7 @@ val unspecified_scheme = ColorFamily(
 )
 
 @Composable
-fun FreenowDemoTheme(
+fun FreenowTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit

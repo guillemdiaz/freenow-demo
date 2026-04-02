@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Freenow Demo</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_trips">Trips</string>
+    <string name="nav_wallet">Wallet</string>
+    <string name="nav_account">Account</string>
 </resources>

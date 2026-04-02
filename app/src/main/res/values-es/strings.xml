@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">Demo Freenow</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_trips">Trayectos</string>
+    <string name="nav_wallet">Cartera</string>
+    <string name="nav_account">Cuenta</string>
+</resources>
