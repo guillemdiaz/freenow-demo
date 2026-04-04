@@ -4,4 +4,10 @@
     <string name="nav_trips">Trips</string>
     <string name="nav_wallet">Wallet</string>
     <string name="nav_account">Account</string>
+    <string name="home_search_bar_later">Later</string>
+    <string name="home_search_bar_where">Where to?</string>
+    <string name="address_home_title">Home</string>
+    <string name="address_work_title">Work</string>
+    <string name="address_home_subtitle">Set home address</string>
+    <string name="address_work_subtitle">Set work address</string>
 </resources>
