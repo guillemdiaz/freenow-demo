@@ -21,6 +21,10 @@ import com.example.freenowdemo.feature.booking.BookingScreen
 import com.example.freenowdemo.ui.navigation.NavDestination
 import com.example.freenowdemo.ui.navigation.topLevelDestinations
 
+/**
+ * Root composable of the app. Sets up the navigation controller, bottom navigation bar,
+ * and the NavHost with all the top-level destinations.
+ */
 @Composable
 fun FreenowApp() {
     val navController = rememberNavController()
@@ -37,12 +41,12 @@ fun FreenowApp() {
                         selected = selected,
                         onClick = {
                             navController.navigate(destination.destination.route) {
+                                // Pop back to home to avoid building up a large back stack
+                                // when the user switches between tabs repeatedly
                                 popUpTo(NavDestination.Home.route) {
                                     saveState = true
                                 }
-                                // Avoid multiple copies of the same destination
                                 launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
                                 restoreState = true
                             }
                         },
@@ -74,7 +78,7 @@ fun FreenowApp() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(NavDestination.Home.route) { BookingScreen() }
-            // TODO: the depeer screens
+            // TODO: Depeer screens
             /*
             composable("taxi_detail/{taxiId}") { backStackEntry ->
                 val taxiId = backStackEntry.arguments?.getString("taxiId")
@@ -84,9 +88,9 @@ fun FreenowApp() {
                 )
             }
              */
-            composable(NavDestination.Trips.route) { /* (leave blank) */ }
-            composable(NavDestination.Wallet.route) { /* (leave blank) */ }
-            composable(NavDestination.Account.route) { /* (leave blank) */ }
+            composable(NavDestination.Trips.route) { /* Left blank */ }
+            composable(NavDestination.Wallet.route) { /* Left blank */ }
+            composable(NavDestination.Account.route) { /* Left blank */ }
         }
     }
 }

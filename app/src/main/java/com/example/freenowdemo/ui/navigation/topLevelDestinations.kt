@@ -1,8 +1,14 @@
+@file:Suppress("ktlint:standard:filename")
+
 package com.example.freenowdemo.ui.navigation
 
 import com.example.freenowdemo.R
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 
+/**
+ * Ordered list of destinations rendered in the bottom navigation bar.
+ * The order here determines the order they appear left to right in the UI.
+ */
 val topLevelDestinations = listOf(
     TopLevelDestination(
         destination = NavDestination.Home,

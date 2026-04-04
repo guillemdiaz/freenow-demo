@@ -28,6 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * App-level bottom navigation bar with a subtle top shadow to visually separate
+ * it from the screen content.
+ * @param content The navigation bar items to display.
+ */
 @Composable
 fun FreenowNavigationBar(modifier: Modifier = Modifier, content: @Composable RowScope.() -> Unit) {
     val shadowColor = Color.Black.copy(alpha = 0.10f)
@@ -35,10 +40,12 @@ fun FreenowNavigationBar(modifier: Modifier = Modifier, content: @Composable Row
     Box(modifier = modifier) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.background,
+            // Disabled to prevent Material3 from tinting the background with primary color
             tonalElevation = 0.dp,
             content = content
         )
-        // Draw shadow on top of the nav bar, overlapping it
+        // Gradient drawn on top of the bar to fake a top shadow,
+        // since NavigationBar doesn't support elevation shadows on its top edge
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -53,6 +60,10 @@ fun FreenowNavigationBar(modifier: Modifier = Modifier, content: @Composable Row
     }
 }
 
+/**
+ * A single item in [FreenowNavigationBar] with a spring scale animation on press
+ * and support for separate selected/unselected icons.
+ */
 @Composable
 fun RowScope.FreenowNavigationBarItem(
     selected: Boolean,
@@ -75,7 +86,8 @@ fun RowScope.FreenowNavigationBarItem(
         interactionSource = interactionSource,
         icon = {
             Column(
-                // Applies the scale only to the content, not the whole touch target
+                // Scale applied here rather than on the whole item to avoid
+                // shrinking the touch target along with the visual content
                 modifier = Modifier.scale(scale),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -86,6 +98,7 @@ fun RowScope.FreenowNavigationBarItem(
                 }
             }
         },
+        // label is null because it's rendered manually inside the icon slot above
         label = null,
         alwaysShowLabel = false,
         colors = NavigationBarItemDefaults.colors(
@@ -93,6 +106,7 @@ fun RowScope.FreenowNavigationBarItem(
             unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
             selectedTextColor = MaterialTheme.colorScheme.primary,
             unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            // Removed the default pill indicator to keep the bar visually minimal
             indicatorColor = Color.Transparent
         )
     )
