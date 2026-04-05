@@ -37,11 +37,32 @@
   },
   {
     "featureType": "poi",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.icon",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },
+  {
+    "featureType": "poi",
     "elementType": "labels.text.fill",
     "stylers": [
       {
         "color": "#d59563"
       }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "elementType": "labels",
+    "stylers": [
+      { "visibility": "on" }
     ]
   },
   {
@@ -154,6 +175,13 @@
   },
   {
     "featureType": "transit.station",
+    "elementType": "labels.icon",
+    "stylers": [
+      { "visibility": "on" }
+    ]
+  },
+  {
+    "featureType": "transit.station",
     "elementType": "labels.text.fill",
     "stylers": [
       {
@@ -184,7 +212,7 @@
     "elementType": "labels.text.stroke",
     "stylers": [
       {
-        "lightness": -20
+        "lightness": -40
       }
     ]
   }
