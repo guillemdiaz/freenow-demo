@@ -5,4 +5,10 @@
     <string name="nav_trips">Trayectos</string>
     <string name="nav_wallet">Cartera</string>
     <string name="nav_account">Cuenta</string>
+    <string name="home_search_bar_later">Más tarde</string>
+    <string name="home_search_bar_where">¿Dónde vas?</string>
+    <string name="address_home_title">Casa</string>
+    <string name="address_work_title">Trabajo</string>
+    <string name="address_home_subtitle">Dirección de casa no introducida</string>
+    <string name="address_work_subtitle">Dirección profesional</string>
 </resources>

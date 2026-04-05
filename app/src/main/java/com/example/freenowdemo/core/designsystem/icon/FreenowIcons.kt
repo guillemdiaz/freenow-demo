@@ -2,6 +2,9 @@ package com.example.freenowdemo.core.designsystem.icon
 
 import com.example.freenowdemo.R
 
+/**
+ * Central registry of all drawable resources used as icons across the app.
+ */
 object FreenowIcons {
     val Home = R.drawable.ic_home
     val SelectedHome = R.drawable.ic_home_filled
