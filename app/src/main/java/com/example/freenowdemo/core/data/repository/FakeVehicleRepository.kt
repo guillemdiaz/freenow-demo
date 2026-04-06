@@ -18,12 +18,12 @@ class FakeVehicleRepository @Inject constructor() : VehicleRepository {
      * Returns a hardcoded list of vehicles after a simulated network delay.
      */
     override suspend fun getVehicles(): List<Vehicle> {
-        delay(1500)
+        delay(7500)
 
         return listOf(
-            Vehicle("taxi_1", VehicleType.TAXI, 42.2665, 2.9615),
-            Vehicle("taxi_2", VehicleType.TAXI, 42.2670, 2.9600),
-            Vehicle("car_1", VehicleType.RENTAL_CAR, 42.2650, 2.9620)
+            Vehicle("taxi_1", VehicleType.TAXI, 41.39888, 2.17040),
+            Vehicle("taxi_2", VehicleType.TAXI, 41.38935, 2.15378),
+            Vehicle("car_1", VehicleType.RENTAL_CAR, 41.38050, 2.16689)
         )
     }
 }

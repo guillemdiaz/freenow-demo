@@ -1,5 +1,6 @@
 package com.example.freenowdemo.feature.booking
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
@@ -27,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import com.example.freenowdemo.core.designsystem.component.FreenowSearchBar
 import com.example.freenowdemo.core.designsystem.component.FreenowServiceCard
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
+import com.example.freenowdemo.core.model.VehicleType
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
@@ -48,6 +52,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 /**
@@ -204,7 +210,26 @@ private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewS
         cameraPositionState = cameraPositionState,
         properties = properties,
         uiSettings = uiSettings
-    )
+    ) {
+        state.vehicles.forEach { vehicle ->
+            val iconRes = when (vehicle.type) {
+                VehicleType.TAXI -> R.drawable.taxi
+                VehicleType.RENTAL_CAR -> R.drawable.car
+            }
+
+            // Draw the Compose UI exactly at the vehicle's Lat/Lng coordinates
+            MarkerComposable(
+                state = MarkerState(position = LatLng(vehicle.latitude, vehicle.longitude)),
+                title = vehicle.id
+            ) {
+                Image(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = "Vehicle on map",
+                    modifier = Modifier.size(36.dp)
+                )
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
