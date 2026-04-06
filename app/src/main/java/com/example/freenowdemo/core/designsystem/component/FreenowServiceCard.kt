@@ -58,7 +58,7 @@ fun FreenowServiceCardPreview() {
     FreenowTheme {
         FreenowServiceCard(
             title = "Taxi",
-            image = R.drawable.taxi,
+            image = R.drawable.img_taxi,
             onItemClick = {}
         )
     }

@@ -27,15 +27,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
@@ -46,6 +48,7 @@ import com.example.freenowdemo.R
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
 import com.example.freenowdemo.core.designsystem.component.FreenowSearchBar
 import com.example.freenowdemo.core.designsystem.component.FreenowServiceCard
+import com.example.freenowdemo.core.designsystem.component.NoConnectionBanner
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
 import com.example.freenowdemo.core.model.VehicleType
@@ -72,12 +75,11 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    // Listen for one-off MVI Effects (like showing a banner or navigating)
+    // Listen for one-off MVI Effects
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is BookingViewEffect.ShowNoConnectionBanner -> {
-                    // TODO: Build the UI banner
                     println("EFFECT: Show offline banner!")
                 }
 
@@ -86,17 +88,16 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
                 }
 
                 is BookingViewEffect.NavigateToSetSavedLocation -> {
-                    println("EFFECT: Navigate to set saved Location: ${effect.locationType}")
+                    println("EFFECT: Navigate to set saved location: ${effect.locationType}")
                 }
             }
         }
     }
 
     val scaffoldState = rememberBottomSheetScaffoldState()
-    val scope = rememberCoroutineScope()
 
     BottomSheetScaffold(
-        modifier = modifier,
+        modifier = modifier.alpha(if (state.isOffline) 0.4f else 1f),
         sheetContainerColor = MaterialTheme.colorScheme.background,
         containerColor = if (state.isLoading) {
             MaterialTheme.colorScheme.surfaceVariant
@@ -158,6 +159,27 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
             }
         }
     }
+    // Full-screen overlay dialog
+    if (state.isOffline) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                NoConnectionBanner(
+                    isVisible = true,
+                    onRetryClick = {
+                        viewModel.processIntent(BookingViewIntent.LoadVehicles)
+                    }
+                )
+            }
+        }
+    }
 }
 
 /**
@@ -167,7 +189,9 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
 @Composable
 private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
     Column(
-        Modifier.fillMaxWidth().fillMaxSize()
+        Modifier
+            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         FreenowSearchBar(
             modifier = Modifier
@@ -176,7 +200,9 @@ private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
             onItemClick = { onIntent(BookingViewIntent.SearchBarClicked) }
         )
         FreenowLocationListItem(
-            modifier = Modifier.fillMaxWidth().padding(start = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp),
             title = stringResource(R.string.address_home_title),
             subtitle = stringResource(R.string.address_home_subtitle),
             icon = FreenowIcons.Home,
@@ -184,7 +210,9 @@ private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         FreenowLocationListItem(
-            modifier = Modifier.fillMaxWidth().padding(start = 24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp),
             title = stringResource(R.string.address_work_title),
             subtitle = stringResource(R.string.address_work_subtitle),
             icon = FreenowIcons.Work,
@@ -192,19 +220,21 @@ private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             FreenowServiceCard(
                 modifier = Modifier.weight(1f),
                 title = "Taxi",
-                image = R.drawable.taxi,
+                image = R.drawable.img_taxi,
                 onItemClick = { onIntent(BookingViewIntent.ServiceCardClicked("Taxi")) }
             )
             FreenowServiceCard(
                 modifier = Modifier.weight(1f),
                 title = "Rent a car",
-                image = R.drawable.car,
+                image = R.drawable.img_car,
                 onItemClick = { onIntent(BookingViewIntent.ServiceCardClicked("Rent a car")) }
             )
         }
@@ -252,8 +282,8 @@ private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewS
     ) {
         state.vehicles.forEach { vehicle ->
             val iconRes = when (vehicle.type) {
-                VehicleType.TAXI -> R.drawable.taxi
-                VehicleType.RENTAL_CAR -> R.drawable.car
+                VehicleType.TAXI -> R.drawable.img_taxi
+                VehicleType.RENTAL_CAR -> R.drawable.img_car
             }
 
             // Draw the Compose UI exactly at the vehicle's Lat/Lng coordinates

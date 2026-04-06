@@ -10,4 +10,8 @@
     <string name="address_work_title">Work</string>
     <string name="address_home_subtitle">Set home address</string>
     <string name="address_work_subtitle">Set work address</string>
+    <string name="offline_msg_title">Looks like you\'re offline</string>
+    <string name="offline_msg_subtitle">To use Freenow, make sure you\'re connected to the
+        internet</string>
+    <string name="offline_msg_button">Try again</string>
 </resources>

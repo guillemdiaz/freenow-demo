@@ -23,7 +23,10 @@ class FakeVehicleRepository @Inject constructor() : VehicleRepository {
         return listOf(
             Vehicle("taxi_1", VehicleType.TAXI, 41.39888, 2.17040),
             Vehicle("taxi_2", VehicleType.TAXI, 41.38935, 2.15378),
-            Vehicle("car_1", VehicleType.RENTAL_CAR, 41.38050, 2.16689)
+            Vehicle("taxi_3", VehicleType.TAXI, 41.38050, 2.16689),
+            Vehicle("taxi_4", VehicleType.TAXI, 41.38915, 2.14933),
+            Vehicle("taxi_5", VehicleType.TAXI, 41.39470, 2.20089)
+
         )
     }
 }
