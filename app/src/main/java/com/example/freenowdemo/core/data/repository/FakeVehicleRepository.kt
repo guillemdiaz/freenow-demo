@@ -20,6 +20,8 @@ class FakeVehicleRepository @Inject constructor() : VehicleRepository {
     override suspend fun getVehicles(): List<Vehicle> {
         delay(7500)
 
+        // throw Exception("Simulated network failure")
+
         return listOf(
             Vehicle("taxi_1", VehicleType.TAXI, 41.39888, 2.17040),
             Vehicle("taxi_2", VehicleType.TAXI, 41.38935, 2.15378),
