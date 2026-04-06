@@ -1,3 +1,11 @@
 package com.example.freenowdemo.feature.booking.state
 
-class BookingViewEffect
+/**
+ * Represents one-shot side effects produced by the Booking ViewModel that the UI must act on
+ * exactly once.
+ */
+sealed class BookingViewEffect {
+    object ShowNoConnectionBanner : BookingViewEffect()
+    data class NavigateToDestinationSearch(val preselectedService: String? = null) : BookingViewEffect()
+    data class NavigateToSetSavedLocation(val locationType: String) : BookingViewEffect()
+}

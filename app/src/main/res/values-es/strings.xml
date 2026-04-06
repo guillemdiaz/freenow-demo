@@ -11,4 +11,8 @@
     <string name="address_work_title">Trabajo</string>
     <string name="address_home_subtitle">Dirección de casa no introducida</string>
     <string name="address_work_subtitle">Dirección profesional</string>
+    <string name="offline_msg_title">Parece que estás desconectado</string>
+    <string name="offline_msg_subtitle">Para usar Freenow, asegúrate de estar conectado/a a
+    internet.</string>
+    <string name="offline_msg_button">Volver a intentarlo</string>
 </resources>
