@@ -1,5 +1,8 @@
 package com.example.freenowdemo.feature.booking
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -35,6 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.freenowdemo.R
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
 import com.example.freenowdemo.core.designsystem.component.FreenowSearchBar
@@ -91,6 +98,11 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
     BottomSheetScaffold(
         modifier = modifier,
         sheetContainerColor = MaterialTheme.colorScheme.background,
+        containerColor = if (state.isLoading) {
+            MaterialTheme.colorScheme.surfaceVariant
+        } else {
+            MaterialTheme.colorScheme.background
+        },
         scaffoldState = scaffoldState,
         sheetPeekHeight = 475.dp,
         sheetShadowElevation = 8.dp,
@@ -114,10 +126,37 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
         },
         sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         sheetContent = {
-            BookingSheetContent(state = state, onIntent = { intent -> viewModel.processIntent(intent) })
+            BookingSheetContent(onIntent = { intent -> viewModel.processIntent(intent) })
         }
-    ) { innerPadding ->
-        BookingMapContent(modifier = Modifier.fillMaxSize(), state = state)
+    ) { _ ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            BookingMapContent(modifier = Modifier.fillMaxSize(), state = state)
+
+            AnimatedVisibility(
+                visible = state.isLoading,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 475.dp)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center
+                ) {
+                    // Load the JSON file from res/raw
+                    val composition by rememberLottieComposition(
+                        LottieCompositionSpec.RawRes(R.raw.lottie_animation)
+                    )
+
+                    LottieAnimation(
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever,
+                        modifier = Modifier.size(200.dp)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -126,7 +165,7 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
  * and available service options.
  */
 @Composable
-private fun BookingSheetContent(state: BookingViewState, onIntent: (BookingViewIntent) -> Unit) {
+private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
     Column(
         Modifier.fillMaxWidth().fillMaxSize()
     ) {
