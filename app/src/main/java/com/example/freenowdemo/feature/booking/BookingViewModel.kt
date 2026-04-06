@@ -45,9 +45,28 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
     fun processIntent(intent: BookingViewIntent) {
         when (intent) {
             is BookingViewIntent.LoadVehicles -> loadVehicles()
+
             is BookingViewIntent.SelectVehicle -> selectVehicle(intent.vehicleId)
-            is BookingViewIntent.BookRideClicked -> bookRide()
+
             is BookingViewIntent.DismissOfflineBanner -> dismissOfflineBanner()
+
+            is BookingViewIntent.SearchBarClicked -> {
+                viewModelScope.launch {
+                    _effect.send(BookingViewEffect.NavigateToDestinationSearch(preselectedService = null))
+                }
+            }
+
+            is BookingViewIntent.ServiceCardClicked -> {
+                viewModelScope.launch {
+                    _effect.send(BookingViewEffect.NavigateToDestinationSearch(preselectedService = intent.serviceType))
+                }
+            }
+
+            is BookingViewIntent.SavedLocationClicked -> {
+                viewModelScope.launch {
+                    _effect.send(BookingViewEffect.NavigateToSetSavedLocation(locationType = intent.locationType))
+                }
+            }
         }
     }
 
@@ -81,18 +100,6 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
      */
     private fun selectVehicle(vehicleId: String) {
         _state.update { it.copy(selectedVehicle = vehicleId) }
-    }
-
-    /**
-     * Handles the "Book Ride" button tap.
-     * Emits [BookingViewEffect.NavigateToSuccess] to instruct the UI to navigate to the
-     * success screen.
-     * TODO: trigger the Lottie animation state before navigating.
-     */
-    private fun bookRide() {
-        viewModelScope.launch {
-            _effect.send(BookingViewEffect.NavigateToSuccess)
-        }
     }
 
     /**
