@@ -36,6 +36,15 @@ guidelines, separating `core` utilities from `feature` layers.
 - Analytics (ready for Mixpanel/Braze).
 - Modern Compose animations (Lottie)
 
+## Screenshots
+
+| | Booking Screen | Offline Dialog |
+|---|---|---|
+| **Light** | ![Light Booking](docs/screenshots/light_booking_screen.png) | ![Light Offline](docs/screenshots/light_offline_dialog.png) |
+| **Dark** | ![Dark Booking](docs/screenshots/dark_booking_screen.png) | ![Dark Offline](docs/screenshots/dark_offline_dialog.png) |
+
+![Loading Animation](docs/screenshots/lottie_loading_animation.gif)
+
 ## Tech stack
 
 | Layer                | Technology                                |
@@ -67,6 +76,7 @@ MAPS_API_KEY=your_key_here
 4. Run the app
 
 ## Project structure
+
 ```
 app/src/main/java/com/example/freenowdemo/
 ├── core/
