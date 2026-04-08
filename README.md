@@ -18,7 +18,7 @@ emphasizing a strict **MVI architecture** and reactive UI with **Jetpack Compose
 > - [ ] **Destination flow:** Building the Destination screen and passing navigation arguments 
 >       back to the Booking Screen. *(Currently working on this)*
 > - [ ] **Polish & tests:** Coroutine Unit Tests for the ViewModel, AnalyticsTracker injection, 
-> -     and (maybe) baseline profiles.
+>       and (maybe) baseline profiles.
 
 ## Architecture
 
