@@ -38,14 +38,14 @@ guidelines, separating `core` utilities from `feature` layers.
 
 ## Screenshots
 
-| | Booking Screen | Offline Dialog |
-|---|---|---|
+|           | Booking Screen                                              | Offline Dialog                                              |
+|-----------|-------------------------------------------------------------|-------------------------------------------------------------|
 | **Light** | ![Light Booking](docs/screenshots/light_booking_screen.png) | ![Light Offline](docs/screenshots/light_offline_dialog.png) |
-| **Dark** | ![Dark Booking](docs/screenshots/dark_booking_screen.png) | ![Dark Offline](docs/screenshots/dark_offline_dialog.png) |
+| **Dark**  | ![Dark Booking](docs/screenshots/dark_booking_screen.png)   | ![Dark Offline](docs/screenshots/dark_offline_dialog.png)   |
 
-<div align="center">
-  <img src="docs/screenshots/lottie_loading_animation.gif" width="350"/>
-</div>
+| Loading map                                                            | Drag Handle                                               |
+|------------------------------------------------------------------------|-----------------------------------------------------------|
+| <img src="docs/screenshots/lottie_loading_animation.gif" width="375"/> | <img src="docs/screenshots/drag_handle.gif" width="375"/> |
 
 ## Tech stack
 
