@@ -17,5 +17,10 @@ object FreenowIcons {
     val Search = R.drawable.ic_search
     val Work = R.drawable.ic_work
     val Calendar = R.drawable.ic_calendar
+    val Pickup = R.drawable.ic_circle_circle
+    val Dropoff = R.drawable.ic_circle
+    val BackArrow = R.drawable.ic_arrow_back
+    val NavigationArrow = R.drawable.ic_navigation
+    val Add = R.drawable.ic_add_circle
     val Map = R.drawable.ic_map
 }
