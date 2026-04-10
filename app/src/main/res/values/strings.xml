@@ -14,4 +14,9 @@
     <string name="offline_msg_subtitle">To use Freenow, make sure you\'re connected to the
         internet</string>
     <string name="offline_msg_button">Try again</string>
+    <string name="choose_on_map">Choose on map</string>
+    <string name="dropoff">Dropoff</string>
+    <string name="pickup">Pickup</string>
+    <string name="show_all">Show all</string>
+    <string name="current_location">Current location</string>
 </resources>

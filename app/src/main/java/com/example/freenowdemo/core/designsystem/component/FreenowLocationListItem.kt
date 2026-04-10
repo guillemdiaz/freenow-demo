@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,8 +34,9 @@ import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
 fun FreenowLocationListItem(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String,
+    subtitle: String? = null,
     @DrawableRes icon: Int,
+    iconRotation: Float = 0f,
     onItemClick: () -> Unit
 ) {
     Surface(
@@ -50,9 +52,9 @@ fun FreenowLocationListItem(
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp).rotate(iconRotation)
             )
-            Spacer(modifier = Modifier.width(20.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -62,11 +64,13 @@ fun FreenowLocationListItem(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                if (subtitle != null) {
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

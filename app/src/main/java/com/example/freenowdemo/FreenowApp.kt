@@ -78,14 +78,9 @@ fun FreenowApp() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(NavDestination.Home.route) { BookingScreen() }
-            // TODO: Depeer screens
             /*
-            composable("taxi_detail/{taxiId}") { backStackEntry ->
-                val taxiId = backStackEntry.arguments?.getString("taxiId")
-                TaxiDetailScreen(
-                    taxiId = taxiId,
-                    onBackClick = { navController.popBackStack() }
-                )
+            composable(NavDestination.Home.route) {
+                DestinationScreen(onBackClick = { navController.popBackStack() }, onAddStopClick = { /* TODO */ })
             }
              */
             composable(NavDestination.Trips.route) { /* Left blank */ }
