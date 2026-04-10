@@ -31,7 +31,15 @@ import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
  * A card with pickup and dropoff address fields, a back navigation button and an add stop button.
  */
 @Composable
-fun FreenowDestinationCard(modifier: Modifier = Modifier, onBackClick: () -> Unit, onAddStopClick: () -> Unit = {}) {
+fun FreenowDestinationCard(
+    modifier: Modifier = Modifier,
+    pickupText: String,
+    dropoffText: String,
+    onPickupChange: (String) -> Unit,
+    onDropoffChange: (String) -> Unit,
+    onBackClick: () -> Unit,
+    onAddStopClick: () -> Unit = {}
+) {
     Surface(
         modifier = modifier
             .fillMaxWidth(),
@@ -56,16 +64,16 @@ fun FreenowDestinationCard(modifier: Modifier = Modifier, onBackClick: () -> Uni
             )
             Column(modifier = Modifier.weight(1f)) {
                 FreenowAddressTextField(
-                    value = "",
-                    onValueChange = { /* TODO */ },
+                    value = pickupText,
+                    onValueChange = onPickupChange,
                     placeholderText = stringResource(R.string.pickup),
                     leadingIcon = FreenowIcons.Pickup,
                     leadingIconTint = MaterialTheme.colorScheme.onSurface
                 )
                 HorizontalDivider()
                 FreenowAddressTextField(
-                    value = "",
-                    onValueChange = { /* TODO */ },
+                    value = dropoffText,
+                    onValueChange = onDropoffChange,
                     placeholderText = stringResource(R.string.dropoff),
                     leadingIcon = FreenowIcons.Dropoff,
                     leadingIconTint = MaterialTheme.colorScheme.primary
@@ -87,6 +95,10 @@ fun FreenowDestinationCard(modifier: Modifier = Modifier, onBackClick: () -> Uni
 fun FreenowDestinationCardPreview() {
     FreenowTheme {
         FreenowDestinationCard(
+            pickupText = "",
+            dropoffText = "",
+            onPickupChange = {},
+            onDropoffChange = {},
             onBackClick = {},
             onAddStopClick = {}
         )

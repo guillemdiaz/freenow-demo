@@ -9,4 +9,5 @@ sealed class NavDestination(val route: String) {
     object Trips : NavDestination("trips")
     object Wallet : NavDestination("wallet")
     object Account : NavDestination("account")
+    object Destination : NavDestination("destination")
 }

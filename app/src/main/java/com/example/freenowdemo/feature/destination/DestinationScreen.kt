@@ -30,13 +30,21 @@ import com.example.freenowdemo.core.designsystem.component.FreenowDestinationCar
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
+import com.example.freenowdemo.feature.destination.state.DestinationViewIntent
+import com.example.freenowdemo.feature.destination.state.DestinationViewState
 
 /**
  * Screen allowing the user to set pickup and dropoff destinations, choose a location on
  * the map or select from saved locations.
  */
 @Composable
-fun DestinationScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, onAddStopClick: () -> Unit) {
+fun DestinationScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onAddStopClick: () -> Unit,
+    state: DestinationViewState,
+    onIntent: (DestinationViewIntent) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,6 +62,14 @@ fun DestinationScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, on
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 FreenowDestinationCard(
+                    pickupText = state.pickupText,
+                    dropoffText = state.dropoffText,
+                    onPickupChange = { newText ->
+                        onIntent(DestinationViewIntent.UpdatePickup(newText))
+                    },
+                    onDropoffChange = { newText ->
+                        onIntent(DestinationViewIntent.UpdateDropoff(newText))
+                    },
                     onBackClick = onBackClick,
                     onAddStopClick = onAddStopClick
                 )
@@ -132,7 +148,9 @@ fun DestinationScreenPreview() {
     FreenowTheme {
         DestinationScreen(
             onBackClick = {},
-            onAddStopClick = {}
+            onAddStopClick = {},
+            state = DestinationViewState(),
+            onIntent = {}
         )
     }
 }
