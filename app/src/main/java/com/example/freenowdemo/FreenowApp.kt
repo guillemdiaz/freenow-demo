@@ -100,6 +100,9 @@ fun FreenowApp() {
                         when (effect) {
                             is DestinationViewEffect.NavigateBackWithResult -> {
                                 println("EFFECT: Navigate back")
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set("destination_set", true)
                                 navController.popBackStack()
                             }
                         }
