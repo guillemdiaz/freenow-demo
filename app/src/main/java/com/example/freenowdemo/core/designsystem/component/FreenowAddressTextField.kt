@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,12 +31,14 @@ import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
  */
 @Composable
 fun FreenowAddressTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     placeholderText: String,
     leadingIcon: Int,
     leadingIconTint: Color,
-    modifier: Modifier = Modifier
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     BasicTextField(
         value = value,
@@ -42,9 +46,11 @@ fun FreenowAddressTextField(
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
         modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
         singleLine = true,
-        textStyle = MaterialTheme.typography.bodyMedium.copy(
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
             color = MaterialTheme.colorScheme.onSurface
         ),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         decorationBox = { innerTextField ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,

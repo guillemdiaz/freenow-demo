@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +46,9 @@ fun DestinationScreen(
     state: DestinationViewState,
     onIntent: (DestinationViewIntent) -> Unit
 ) {
+    // Local focus manager to handle keyboard dismissal
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,11 +68,16 @@ fun DestinationScreen(
                 FreenowDestinationCard(
                     pickupText = state.pickupText,
                     dropoffText = state.dropoffText,
+                    isConfirmReady = state.isConfirmEnabled,
                     onPickupChange = { newText ->
                         onIntent(DestinationViewIntent.UpdatePickup(newText))
                     },
                     onDropoffChange = { newText ->
                         onIntent(DestinationViewIntent.UpdateDropoff(newText))
+                    },
+                    onKeyboardConfirm = {
+                        focusManager.clearFocus()
+                        onIntent(DestinationViewIntent.ConfirmClicked)
                     },
                     onBackClick = onBackClick,
                     onAddStopClick = onAddStopClick

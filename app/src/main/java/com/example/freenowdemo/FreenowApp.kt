@@ -83,7 +83,15 @@ fun FreenowApp() {
             startDestination = NavDestination.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(NavDestination.Home.route) { BookingScreen() }
+            // TODO: Route pattern cleanup for all feature screens. Split into XxxRoute.kt (ViewModel, effects, nav)
+            //  and XxxScreen.kt (state + onIntent)
+            composable(NavDestination.Home.route) {
+                BookingScreen(
+                    onNavigateToDestination = {
+                        navController.navigate(NavDestination.Destination.route)
+                    }
+                )
+            }
             composable(NavDestination.Destination.route) {
                 val viewModel = hiltViewModel<DestinationViewModel>()
                 val state by viewModel.state.collectAsStateWithLifecycle()

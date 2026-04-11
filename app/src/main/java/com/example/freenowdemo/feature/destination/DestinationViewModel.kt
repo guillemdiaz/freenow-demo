@@ -56,8 +56,7 @@ class DestinationViewModel @Inject constructor() : ViewModel() {
         _state.update {
             it.copy(
                 pickupText = newText,
-                isConfirmEnabled =
-                newText.isNotBlank() && it.dropoffText.isNotBlank()
+                isConfirmEnabled = newText.isNotBlank() && it.dropoffText.isNotBlank()
             )
         }
     }
@@ -69,8 +68,7 @@ class DestinationViewModel @Inject constructor() : ViewModel() {
         _state.update {
             it.copy(
                 dropoffText = newText,
-                isConfirmEnabled =
-                newText.isNotBlank() && it.pickupText.isNotBlank()
+                isConfirmEnabled = newText.isNotBlank() && it.pickupText.isNotBlank()
             )
         }
     }

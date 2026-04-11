@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.freenowdemo.R
@@ -35,8 +38,10 @@ fun FreenowDestinationCard(
     modifier: Modifier = Modifier,
     pickupText: String,
     dropoffText: String,
+    isConfirmReady: Boolean,
     onPickupChange: (String) -> Unit,
     onDropoffChange: (String) -> Unit,
+    onKeyboardConfirm: () -> Unit,
     onBackClick: () -> Unit,
     onAddStopClick: () -> Unit = {}
 ) {
@@ -68,7 +73,8 @@ fun FreenowDestinationCard(
                     onValueChange = onPickupChange,
                     placeholderText = stringResource(R.string.pickup),
                     leadingIcon = FreenowIcons.Pickup,
-                    leadingIconTint = MaterialTheme.colorScheme.onSurface
+                    leadingIconTint = MaterialTheme.colorScheme.onSurface,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 HorizontalDivider()
                 FreenowAddressTextField(
@@ -76,7 +82,15 @@ fun FreenowDestinationCard(
                     onValueChange = onDropoffChange,
                     placeholderText = stringResource(R.string.dropoff),
                     leadingIcon = FreenowIcons.Dropoff,
-                    leadingIconTint = MaterialTheme.colorScheme.primary
+                    leadingIconTint = MaterialTheme.colorScheme.primary,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (isConfirmReady) {
+                                onKeyboardConfirm()
+                            }
+                        }
+                    )
                 )
             }
             Icon(
@@ -97,10 +111,12 @@ fun FreenowDestinationCardPreview() {
         FreenowDestinationCard(
             pickupText = "",
             dropoffText = "",
+            isConfirmReady = false,
             onPickupChange = {},
             onDropoffChange = {},
             onBackClick = {},
-            onAddStopClick = {}
+            onAddStopClick = {},
+            onKeyboardConfirm = {}
         )
     }
 }
