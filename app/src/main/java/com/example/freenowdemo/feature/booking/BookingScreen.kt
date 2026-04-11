@@ -72,7 +72,12 @@ import com.google.maps.android.compose.rememberCameraPositionState
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = hiltViewModel()) {
+fun BookingScreen(
+    modifier: Modifier = Modifier,
+    // TODO: Refactor to accept state and onIntent instead of the ViewModel directly
+    viewModel: BookingViewModel = hiltViewModel(),
+    onNavigateToDestination: () -> Unit
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     // Listen for one-off MVI Effects
@@ -84,7 +89,7 @@ fun BookingScreen(modifier: Modifier = Modifier, viewModel: BookingViewModel = h
                 }
 
                 is BookingViewEffect.NavigateToDestinationSearch -> {
-                    println("EFFECT: Navigate to destination search. Pre-selected: ${effect.preselectedService}")
+                    onNavigateToDestination()
                 }
 
                 is BookingViewEffect.NavigateToSetSavedLocation -> {

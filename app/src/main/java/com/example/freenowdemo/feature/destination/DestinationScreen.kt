@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,13 +31,24 @@ import com.example.freenowdemo.core.designsystem.component.FreenowDestinationCar
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
+import com.example.freenowdemo.feature.destination.state.DestinationViewIntent
+import com.example.freenowdemo.feature.destination.state.DestinationViewState
 
 /**
  * Screen allowing the user to set pickup and dropoff destinations, choose a location on
  * the map or select from saved locations.
  */
 @Composable
-fun DestinationScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, onAddStopClick: () -> Unit) {
+fun DestinationScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onAddStopClick: () -> Unit,
+    state: DestinationViewState,
+    onIntent: (DestinationViewIntent) -> Unit
+) {
+    // Local focus manager to handle keyboard dismissal
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,6 +66,19 @@ fun DestinationScreen(modifier: Modifier = Modifier, onBackClick: () -> Unit, on
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 FreenowDestinationCard(
+                    pickupText = state.pickupText,
+                    dropoffText = state.dropoffText,
+                    isConfirmReady = state.isConfirmEnabled,
+                    onPickupChange = { newText ->
+                        onIntent(DestinationViewIntent.UpdatePickup(newText))
+                    },
+                    onDropoffChange = { newText ->
+                        onIntent(DestinationViewIntent.UpdateDropoff(newText))
+                    },
+                    onKeyboardConfirm = {
+                        focusManager.clearFocus()
+                        onIntent(DestinationViewIntent.ConfirmClicked)
+                    },
                     onBackClick = onBackClick,
                     onAddStopClick = onAddStopClick
                 )
@@ -132,7 +157,9 @@ fun DestinationScreenPreview() {
     FreenowTheme {
         DestinationScreen(
             onBackClick = {},
-            onAddStopClick = {}
+            onAddStopClick = {},
+            state = DestinationViewState(),
+            onIntent = {}
         )
     }
 }

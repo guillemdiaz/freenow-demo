@@ -6,11 +6,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -18,6 +21,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.freenowdemo.core.designsystem.component.FreenowNavigationBar
 import com.example.freenowdemo.core.designsystem.component.FreenowNavigationBarItem
 import com.example.freenowdemo.feature.booking.BookingScreen
+import com.example.freenowdemo.feature.destination.DestinationScreen
+import com.example.freenowdemo.feature.destination.DestinationViewModel
+import com.example.freenowdemo.feature.destination.state.DestinationViewEffect
 import com.example.freenowdemo.ui.navigation.NavDestination
 import com.example.freenowdemo.ui.navigation.topLevelDestinations
 
@@ -77,12 +83,38 @@ fun FreenowApp() {
             startDestination = NavDestination.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(NavDestination.Home.route) { BookingScreen() }
-            /*
+            // TODO: Route pattern cleanup for all feature screens. Split into XxxRoute.kt (ViewModel, effects, nav)
+            //  and XxxScreen.kt (state + onIntent)
             composable(NavDestination.Home.route) {
-                DestinationScreen(onBackClick = { navController.popBackStack() }, onAddStopClick = { /* TODO */ })
+                BookingScreen(
+                    onNavigateToDestination = {
+                        navController.navigate(NavDestination.Destination.route)
+                    }
+                )
             }
-             */
+            composable(NavDestination.Destination.route) {
+                val viewModel = hiltViewModel<DestinationViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                LaunchedEffect(Unit) {
+                    viewModel.effect.collect { effect ->
+                        when (effect) {
+                            is DestinationViewEffect.NavigateBackWithResult -> {
+                                println("EFFECT: Navigate back")
+                                navController.previousBackStackEntry
+                                    ?.savedStateHandle
+                                    ?.set("destination_set", true)
+                                navController.popBackStack()
+                            }
+                        }
+                    }
+                }
+                DestinationScreen(
+                    state = state,
+                    onIntent = { intent -> viewModel.processIntent(intent) },
+                    onBackClick = { navController.popBackStack() },
+                    onAddStopClick = { /* TODO */ }
+                )
+            }
             composable(NavDestination.Trips.route) { /* Left blank */ }
             composable(NavDestination.Wallet.route) { /* Left blank */ }
             composable(NavDestination.Account.route) { /* Left blank */ }
