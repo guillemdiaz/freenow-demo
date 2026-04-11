@@ -4,7 +4,7 @@ A demo Android app inspired by Freenow booking flow.
 This project was built to demonstrate modern Android development practices, 
 emphasizing a strict **MVI architecture** and reactive UI with **Jetpack Compose**.
 
-> **🚧 Project Status: Work in Progress** 
+> **🚧 Project Status: Work in progress** 
 > <br>*This project is currently under development. Below is
 > the roadmap of completed and upcoming features.*
 >
@@ -55,7 +55,7 @@ guidelines, separating `core` utilities from `feature` layers.
 ### Destination Flow
 |           | Destination Screen                                                  | Validated Form                                                    |
 |-----------|---------------------------------------------------------------------|-------------------------------------------------------------------|
-| **Light** | ![Light Destination](docs/screenshots/light_destination_screen.png) | <img src="docs/screenshots/destination_filling.gif" width="375"/> |
+| **Light** | ![Light Destination](docs/screenshots/light_destination_screen.png) | <img src="docs/screenshots/destination_filling.gif" width="350"/> |
 | **Dark**  | ![Dark Destination](docs/screenshots/dark_destination_screen.png)   |                                                                   |
 
 
