@@ -1,6 +1,6 @@
 # Freenow Demo
 
-A demo Android app reproducing the Freenow booking flow.
+A demo Android app inspired by Freenow booking flow.
 This project was built to demonstrate modern Android development practices, 
 emphasizing a strict **MVI architecture** and reactive UI with **Jetpack Compose**.
 
@@ -15,10 +15,11 @@ emphasizing a strict **MVI architecture** and reactive UI with **Jetpack Compose
 >       vehicles on `maps-compose`.
 > - [x] **Graceful degradation:** MVI Offline toggle with a custom connection Dialog and 
 >       Lottie loading states.
-> - [ ] **Destination flow:** Building the Destination screen and passing navigation arguments 
->       back to the Booking Screen. *(Currently working on this)*
-> - [ ] **Polish & tests:** Coroutine Unit Tests for the ViewModel, AnalyticsTracker injection, 
->       and (maybe) baseline profiles.
+> - [x] **Destination flow:** Built the Destination screen with form validation, custom text
+    >       inputs, and a `SavedStateHandle` navigation handshake back to the map.
+> - [ ] **Booking confirmation:** Synchronizing the Bottom Sheet UI with Google Maps camera
+    >       animations and handling the final booking state. *(Currently working on this)*
+> - [ ] **Polish & tests:** Coroutine Unit Tests for the ViewModel, AnalyticsTracker injection, etc.
 
 ## Architecture
 
@@ -27,6 +28,8 @@ pattern. The project structure is inspired by Google's `Now in Android` (NiA) ar
 guidelines, separating `core` utilities from `feature` layers.
 
 ![Architecture Diagram](docs/mvi_architecture_diagram.png)
+> *Note: This diagram reflects the initial version of the demo. It will be updated upon project 
+> completion to reflect the final multi-screen route refactor and cross-screen state handling.*
 
 ## Features
 
@@ -38,14 +41,23 @@ guidelines, separating `core` utilities from `feature` layers.
 
 ## Screenshots
 
+### Booking & State Handling
 |           | Booking Screen                                              | Offline Dialog                                              |
 |-----------|-------------------------------------------------------------|-------------------------------------------------------------|
 | **Light** | ![Light Booking](docs/screenshots/light_booking_screen.png) | ![Light Offline](docs/screenshots/light_offline_dialog.png) |
 | **Dark**  | ![Dark Booking](docs/screenshots/dark_booking_screen.png)   | ![Dark Offline](docs/screenshots/dark_offline_dialog.png)   |
 
+### Interactive Flows
 | Loading map                                                            | Drag Handle                                               |
 |------------------------------------------------------------------------|-----------------------------------------------------------|
 | <img src="docs/screenshots/lottie_loading_animation.gif" width="375"/> | <img src="docs/screenshots/drag_handle.gif" width="375"/> |
+
+### Destination Flow
+|           | Destination Screen                                                  | Validated Form                                                    |
+|-----------|---------------------------------------------------------------------|-------------------------------------------------------------------|
+| **Light** | ![Light Destination](docs/screenshots/light_destination_screen.png) | <img src="docs/screenshots/destination_filling.gif" width="375"/> |
+| **Dark**  | ![Dark Destination](docs/screenshots/dark_destination_screen.png)   |                                                                   |
+
 
 ## Tech stack
 
