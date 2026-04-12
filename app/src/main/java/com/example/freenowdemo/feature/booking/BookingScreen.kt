@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,8 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -52,7 +49,6 @@ import com.example.freenowdemo.core.designsystem.component.NoConnectionBanner
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
 import com.example.freenowdemo.core.model.VehicleType
-import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
 import com.google.android.gms.maps.model.CameraPosition
@@ -75,27 +71,9 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun BookingScreen(
     modifier: Modifier = Modifier,
     isOffline: Boolean,
-    // TODO: Refactor to accept state and onIntent instead of the ViewModel directly
-    viewModel: BookingViewModel = hiltViewModel(),
-    onNavigateToDestination: () -> Unit
-) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
-    // Listen for one-off MVI Effects
-    LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            when (effect) {
-                is BookingViewEffect.NavigateToDestinationSearch -> {
-                    onNavigateToDestination()
-                }
-
-                is BookingViewEffect.NavigateToSetSavedLocation -> {
-                    println("EFFECT: Navigate to set saved location: ${effect.locationType}")
-                }
-            }
-        }
-    }
-
+    state: BookingViewState,
+    onIntent: (BookingViewIntent) -> Unit)
+{
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
@@ -129,7 +107,7 @@ fun BookingScreen(
         },
         sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         sheetContent = {
-            BookingSheetContent(onIntent = { intent -> viewModel.processIntent(intent) })
+            BookingSheetContent(onIntent = onIntent)
         }
     ) { _ ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -176,7 +154,7 @@ fun BookingScreen(
                 NoConnectionBanner(
                     isVisible = true,
                     onRetryClick = {
-                        viewModel.processIntent(BookingViewIntent.LoadVehicles)
+                        onIntent(BookingViewIntent.LoadVehicles)
                     }
                 )
             }
