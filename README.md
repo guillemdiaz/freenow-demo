@@ -48,9 +48,9 @@ guidelines, separating `core` utilities from `feature` layers.
 | **Dark**  | ![Dark Booking](docs/screenshots/dark_booking_screen.png)   | ![Dark Offline](docs/screenshots/dark_offline_dialog.png)   |
 
 ### Interactive Flows
-| Loading map                                                            | Drag Handle                                               |
-|------------------------------------------------------------------------|-----------------------------------------------------------|
-| <img src="docs/screenshots/lottie_loading_animation.gif" width="375"/> | <img src="docs/screenshots/drag_handle.gif" width="375"/> |
+|           | Loading map                                                  | Drag Handle                                               |
+|-----------|--------------------------------------------------------------|-----------------------------------------------------------|
+| **Light** | <img src="docs/screenshots/lottie_loading.gif" width="350"/> | <img src="docs/screenshots/drag_handle.gif" width="350"/> |
 
 ### Destination Flow
 |           | Destination Screen                                                  | Validated Form                                                    |
