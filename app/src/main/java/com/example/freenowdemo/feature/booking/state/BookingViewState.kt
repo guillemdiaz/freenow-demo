@@ -7,7 +7,6 @@ import com.example.freenowdemo.core.model.Vehicle
  */
 data class BookingViewState(
     val isLoading: Boolean = false,
-    val isOffline: Boolean = false,
     val vehicles: List<Vehicle> = emptyList(),
     val selectedVehicle: String? = null,
     val driverEnRoute: Boolean = false

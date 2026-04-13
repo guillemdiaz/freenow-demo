@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.freenowdemo.core.designsystem.component.FreenowNavigationBar
 import com.example.freenowdemo.core.designsystem.component.FreenowNavigationBarItem
+import com.example.freenowdemo.core.network.NetworkMonitor
 import com.example.freenowdemo.feature.booking.BookingScreen
 import com.example.freenowdemo.feature.destination.DestinationScreen
 import com.example.freenowdemo.feature.destination.DestinationViewModel
@@ -32,7 +33,10 @@ import com.example.freenowdemo.ui.navigation.topLevelDestinations
  * and the NavHost with all the top-level destinations.
  */
 @Composable
-fun FreenowApp() {
+fun FreenowApp(networkMonitor: NetworkMonitor) {
+    val appState = rememberFreenowAppState(networkMonitor = networkMonitor)
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -87,6 +91,7 @@ fun FreenowApp() {
             //  and XxxScreen.kt (state + onIntent)
             composable(NavDestination.Home.route) {
                 BookingScreen(
+                    isOffline = isOffline,
                     onNavigateToDestination = {
                         navController.navigate(NavDestination.Destination.route)
                     }
@@ -109,6 +114,7 @@ fun FreenowApp() {
                     }
                 }
                 DestinationScreen(
+                    isOffline = isOffline,
                     state = state,
                     onIntent = { intent -> viewModel.processIntent(intent) },
                     onBackClick = { navController.popBackStack() },

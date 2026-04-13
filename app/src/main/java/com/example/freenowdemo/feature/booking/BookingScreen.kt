@@ -74,6 +74,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 @Composable
 fun BookingScreen(
     modifier: Modifier = Modifier,
+    isOffline: Boolean,
     // TODO: Refactor to accept state and onIntent instead of the ViewModel directly
     viewModel: BookingViewModel = hiltViewModel(),
     onNavigateToDestination: () -> Unit
@@ -84,10 +85,6 @@ fun BookingScreen(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is BookingViewEffect.ShowNoConnectionBanner -> {
-                    println("EFFECT: Show offline banner!")
-                }
-
                 is BookingViewEffect.NavigateToDestinationSearch -> {
                     onNavigateToDestination()
                 }
@@ -102,7 +99,7 @@ fun BookingScreen(
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
-        modifier = modifier.alpha(if (state.isOffline) 0.4f else 1f),
+        modifier = modifier.alpha(if (isOffline) 0.4f else 1f),
         sheetContainerColor = MaterialTheme.colorScheme.background,
         containerColor = if (state.isLoading) {
             MaterialTheme.colorScheme.surfaceVariant
@@ -165,7 +162,7 @@ fun BookingScreen(
         }
     }
     // Full-screen overlay dialog
-    if (state.isOffline) {
+    if (isOffline) {
         Dialog(
             onDismissRequest = {},
             properties = DialogProperties(

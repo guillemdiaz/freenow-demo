@@ -48,8 +48,6 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
 
             is BookingViewIntent.SelectVehicle -> selectVehicle(intent.vehicleId)
 
-            is BookingViewIntent.DismissOfflineBanner -> dismissOfflineBanner()
-
             is BookingViewIntent.SearchBarClicked -> {
                 viewModelScope.launch {
                     _effect.send(BookingViewEffect.NavigateToDestinationSearch(preselectedService = null))
@@ -83,14 +81,11 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        isOffline = false,
                         vehicles = vehicles
                     )
                 }
             } catch (e: Exception) {
-                // Network or data-layer failure: surface offline state and notify the UI
-                _state.update { it.copy(isLoading = false, isOffline = true) }
-                _effect.send(BookingViewEffect.ShowNoConnectionBanner)
+                _state.update { it.copy(isLoading = false) }
             }
         }
     }
@@ -100,13 +95,5 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
      */
     private fun selectVehicle(vehicleId: String) {
         _state.update { it.copy(selectedVehicle = vehicleId) }
-    }
-
-    /**
-     * Clears the offline banner by setting [BookingViewState.isOffline] to false.
-     * Called when the user explicitly dismisses the no-connection banner.
-     */
-    private fun dismissOfflineBanner() {
-        _state.update { it.copy(isOffline = false) }
     }
 }
