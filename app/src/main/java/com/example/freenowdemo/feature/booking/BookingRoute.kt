@@ -17,6 +17,7 @@ import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 @Suppress("ParamsComparedByRef")
 @Composable
 fun BookingRoute(
+    isOffline: Boolean,
     savedStateHandle: SavedStateHandle,
     onNavigateToDestination: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
@@ -38,12 +39,12 @@ fun BookingRoute(
             when (effect) {
                 is BookingViewEffect.NavigateToDestinationSearch -> onNavigateToDestination()
                 is BookingViewEffect.NavigateToSetSavedLocation -> { /* TODO */ }
-                is BookingViewEffect.ShowNoConnectionBanner -> { /* TODO */ }
             }
         }
     }
 
     BookingScreen(
+        isOffline = isOffline,
         state = state,
         onIntent = viewModel::processIntent
     )

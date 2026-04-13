@@ -72,8 +72,8 @@ fun BookingScreen(
     modifier: Modifier = Modifier,
     isOffline: Boolean,
     state: BookingViewState,
-    onIntent: (BookingViewIntent) -> Unit)
-{
+    onIntent: (BookingViewIntent) -> Unit
+) {
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(

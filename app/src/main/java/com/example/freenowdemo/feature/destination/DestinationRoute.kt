@@ -13,6 +13,7 @@ import com.example.freenowdemo.feature.destination.state.DestinationViewEffect
  */
 @Composable
 fun DestinationRoute(
+    isOffline: Boolean,
     onNavigateBack: () -> Unit,
     onNavigateBackWithResult: () -> Unit,
     viewModel: DestinationViewModel = hiltViewModel()
@@ -28,6 +29,7 @@ fun DestinationRoute(
     }
 
     DestinationScreen(
+        isOffline = isOffline,
         state = state,
         onIntent = viewModel::processIntent,
         onBackClick = onNavigateBack,
