@@ -3,6 +3,7 @@ package com.example.freenowdemo.feature.booking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.freenowdemo.core.data.repository.VehicleRepository
+import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
@@ -21,7 +22,6 @@ import kotlinx.coroutines.launch
  * - Holds and exposes the [BookingViewState] as an observable [StateFlow].
  * - Processes user [BookingViewIntent]s and translates them into state mutations or side effects.
  * - Emits one-shot [BookingViewEffect]s via a [Channel].
- * Injected via Hilt, the repository dependency is put out until the real implementation is wired in.
  */
 @HiltViewModel
 class BookingViewModel @Inject constructor(private val repository: VehicleRepository) : ViewModel() {
@@ -64,6 +64,10 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
                 viewModelScope.launch {
                     _effect.send(BookingViewEffect.NavigateToSetSavedLocation(locationType = intent.locationType))
                 }
+            }
+
+            is BookingViewIntent.DestinationConfirmed -> {
+                _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
             }
         }
     }

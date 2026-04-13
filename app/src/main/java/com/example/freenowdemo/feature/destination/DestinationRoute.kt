@@ -7,6 +7,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.freenowdemo.feature.destination.state.DestinationViewEffect
 
+/**
+ * Smart wrapper for [DestinationScreen] that owns the ViewModel, collects state,
+ * and handles navigation effects.
+ */
 @Composable
 fun DestinationRoute(
     onNavigateBack: () -> Unit,

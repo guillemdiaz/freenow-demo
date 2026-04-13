@@ -88,9 +88,10 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
             startDestination = NavDestination.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(NavDestination.Home.route) {
+            composable(NavDestination.Home.route) { backStackEntry ->
                 BookingRoute(
                     isOffline = isOffline,
+                    savedStateHandle = backStackEntry.savedStateHandle,
                     onNavigateToDestination = {
                         navController.navigate(NavDestination.Destination.route)
                     }
@@ -101,9 +102,8 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                     isOffline = isOffline,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateBackWithResult = {
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("destination_set", true)
+                        val previousEntry = navController.previousBackStackEntry
+                        previousEntry?.savedStateHandle?.set("destination_set", true)
                         navController.popBackStack()
                     }
                 )
