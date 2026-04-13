@@ -5,7 +5,6 @@ package com.example.freenowdemo.feature.booking.state
  * exactly once.
  */
 sealed class BookingViewEffect {
-    object ShowNoConnectionBanner : BookingViewEffect()
     data class NavigateToDestinationSearch(val preselectedService: String? = null) : BookingViewEffect()
     data class NavigateToSetSavedLocation(val locationType: String) : BookingViewEffect()
 }

@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,9 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.freenowdemo.R
 import com.example.freenowdemo.core.designsystem.component.FreenowDestinationCard
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
+import com.example.freenowdemo.core.designsystem.component.NoConnectionBanner
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
 import com.example.freenowdemo.feature.destination.state.DestinationViewIntent
@@ -41,6 +45,7 @@ import com.example.freenowdemo.feature.destination.state.DestinationViewState
 @Composable
 fun DestinationScreen(
     modifier: Modifier = Modifier,
+    isOffline: Boolean,
     onBackClick: () -> Unit,
     onAddStopClick: () -> Unit,
     state: DestinationViewState,
@@ -148,6 +153,22 @@ fun DestinationScreen(
             }
         }
     }
+    if (isOffline) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                NoConnectionBanner(
+                    isVisible = true,
+                    onRetryClick = {}
+                )
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true, name = "Light")
@@ -156,6 +177,7 @@ fun DestinationScreen(
 fun DestinationScreenPreview() {
     FreenowTheme {
         DestinationScreen(
+            isOffline = false,
             onBackClick = {},
             onAddStopClick = {},
             state = DestinationViewState(),
