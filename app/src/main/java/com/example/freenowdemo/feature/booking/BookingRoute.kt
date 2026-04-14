@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 
@@ -19,11 +20,16 @@ import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 fun BookingRoute(
     isOffline: Boolean,
     savedStateHandle: SavedStateHandle,
+    onShowBottomBar: (Boolean) -> Unit,
     onNavigateToDestination: () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isDestinationSet by savedStateHandle.getStateFlow("destination_set", false).collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.currentStep) {
+        onShowBottomBar(state.currentStep == BookingStep.SEARCH)
+    }
 
     LaunchedEffect(isDestinationSet) {
         if (isDestinationSet) {

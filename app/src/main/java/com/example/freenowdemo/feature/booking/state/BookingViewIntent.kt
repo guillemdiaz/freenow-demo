@@ -10,4 +10,5 @@ sealed class BookingViewIntent {
     data class ServiceCardClicked(val serviceType: String) : BookingViewIntent()
     data class SavedLocationClicked(val locationType: String) : BookingViewIntent()
     object DestinationConfirmed : BookingViewIntent()
+    object BackToSearchClicked : BookingViewIntent()
 }

@@ -7,6 +7,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,8 +41,8 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Only shows the bottom bar if the current route is in the top-level list
-    val showBottomBar = topLevelDestinations.any { it.destination.route == currentRoute }
+    var bottomBarVisible by remember { mutableStateOf(true) }
+    val showBottomBar = topLevelDestinations.any { it.destination.route == currentRoute } && bottomBarVisible
 
     Scaffold(
         bottomBar = {
@@ -92,6 +95,7 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                 BookingRoute(
                     isOffline = isOffline,
                     savedStateHandle = backStackEntry.savedStateHandle,
+                    onShowBottomBar = { bottomBarVisible = it },
                     onNavigateToDestination = {
                         navController.navigate(NavDestination.Destination.route)
                     }

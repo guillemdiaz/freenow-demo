@@ -1,28 +1,43 @@
 package com.example.freenowdemo.feature.booking
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +48,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -45,10 +62,13 @@ import com.example.freenowdemo.R
 import com.example.freenowdemo.core.designsystem.component.FreenowLocationListItem
 import com.example.freenowdemo.core.designsystem.component.FreenowSearchBar
 import com.example.freenowdemo.core.designsystem.component.FreenowServiceCard
+import com.example.freenowdemo.core.designsystem.component.FreenowVehicleOptionItem
 import com.example.freenowdemo.core.designsystem.component.NoConnectionBanner
 import com.example.freenowdemo.core.designsystem.icon.FreenowIcons
 import com.example.freenowdemo.core.designsystem.theme.FreenowTheme
+import com.example.freenowdemo.core.model.Vehicle
 import com.example.freenowdemo.core.model.VehicleType
+import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
 import com.google.android.gms.maps.model.CameraPosition
@@ -76,87 +96,115 @@ fun BookingScreen(
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
 
-    BottomSheetScaffold(
-        modifier = modifier.alpha(if (isOffline) 0.4f else 1f),
-        sheetContainerColor = MaterialTheme.colorScheme.background,
-        containerColor = if (state.isLoading) {
-            MaterialTheme.colorScheme.surfaceVariant
-        } else {
-            MaterialTheme.colorScheme.background
-        },
-        scaffoldState = scaffoldState,
-        sheetPeekHeight = 475.dp,
-        sheetShadowElevation = 8.dp,
-        sheetDragHandle = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            ) {
-                // Custom drag handle instead of the default Material one,
-                // to have better control over its size and padding
-                Box(
+    Box(modifier = Modifier.fillMaxSize()) {
+        BottomSheetScaffold(
+            modifier = modifier.alpha(if (isOffline) 0.4f else 1f),
+            sheetContainerColor = MaterialTheme.colorScheme.background,
+            containerColor = if (state.isLoading) {
+                MaterialTheme.colorScheme.surfaceVariant
+            } else {
+                MaterialTheme.colorScheme.background
+            },
+            scaffoldState = scaffoldState,
+            sheetPeekHeight = 475.dp,
+            sheetShadowElevation = 8.dp,
+            sheetDragHandle = {
+                Column(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .width(36.dp)
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
-                )
-            }
-        },
-        sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-        sheetContent = {
-            BookingSheetContent(onIntent = onIntent)
-        }
-    ) { _ ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            BookingMapContent(modifier = Modifier.fillMaxSize(), state = state)
-
-            AnimatedVisibility(
-                visible = state.isLoading,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 475.dp)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
                 ) {
-                    // Load the JSON file from res/raw
-                    val composition by rememberLottieComposition(
-                        LottieCompositionSpec.RawRes(R.raw.lottie_animation)
+                    // Custom drag handle instead of the default Material one,
+                    // to have better control over its size and padding
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .width(36.dp)
+                            .height(4.dp)
+                            .clip(RoundedCornerShape(50))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
                     )
+                }
+            },
+            sheetShape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            sheetContent = {
+                BookingSheetContent(onIntent = onIntent, state = state, scaffoldState = scaffoldState)
+            }
+        ) { _ ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                BookingMapContent(modifier = Modifier.fillMaxSize(), state = state)
 
-                    LottieAnimation(
-                        composition = composition,
-                        iterations = LottieConstants.IterateForever,
-                        modifier = Modifier.size(200.dp)
-                    )
+                AnimatedVisibility(
+                    visible = state.isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(bottom = 475.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Load the JSON file from res/raw
+                        val composition by rememberLottieComposition(
+                            LottieCompositionSpec.RawRes(R.raw.lottie_animation)
+                        )
+
+                        LottieAnimation(
+                            composition = composition,
+                            iterations = LottieConstants.IterateForever,
+                            modifier = Modifier.size(200.dp)
+                        )
+                    }
                 }
             }
         }
-    }
-    // Full-screen overlay dialog
-    if (isOffline) {
-        Dialog(
-            onDismissRequest = {},
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
+        AnimatedVisibility(
+            visible = state.currentStep == BookingStep.SELECT_VEHICLE,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
+            val selectedOption = state.vehicleOptions.find { it.id == state.selectedVehicle }
+
+            Button(
+                onClick = { /* TODO: Trigger CONFIRM_RIDE step */ },
+                enabled = selectedOption != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(24.dp)
             ) {
-                NoConnectionBanner(
-                    isVisible = true,
-                    onRetryClick = {
-                        onIntent(BookingViewIntent.LoadVehicles)
-                    }
+                Text(
+                    text = if (selectedOption != null) "Confirm ${selectedOption.title}" else "Select a ride",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
                 )
+            }
+        }
+        // Full-screen overlay dialog
+        if (isOffline) {
+            Dialog(
+                onDismissRequest = {},
+                properties = DialogProperties(
+                    usePlatformDefaultWidth = false
+                )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    NoConnectionBanner(
+                        isVisible = true,
+                        onRetryClick = {
+                            onIntent(BookingViewIntent.LoadVehicles)
+                        }
+                    )
+                }
             }
         }
     }
@@ -166,8 +214,112 @@ fun BookingScreen(
  * Content of the bottom sheet that shows the search bar, saved locations,
  * and available service options.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
+private fun BookingSheetContent(
+    onIntent: (BookingViewIntent) -> Unit,
+    state: BookingViewState,
+    scaffoldState: BottomSheetScaffoldState
+) {
+    Crossfade(targetState = state.currentStep, label = "Step Swap") { step ->
+        when (step) {
+            BookingStep.SEARCH -> {
+                SearchStepContent(onIntent = onIntent)
+            }
+
+            BookingStep.SELECT_VEHICLE -> {
+                SelectVehicleStepContent(
+                    state = state,
+                    onIntent = onIntent,
+                    scaffoldState = scaffoldState
+                )
+            }
+
+            else -> {}
+        }
+    }
+}
+
+/**
+ * Full-screen Google Map that adapts its style based on the current system theme.
+ * Zoom controls are hidden to keep the UI clean even though the user can still pinch to zoom.
+ */
+@Composable
+private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewState) {
+    val context = LocalContext.current
+    val isDarkTheme = isSystemInDarkTheme()
+
+    val mapStyleOptions = remember(isDarkTheme) {
+        if (isDarkTheme) {
+            // Custom JSON map style for dark mode to prevent the map
+            // from flashing/re-rendering when the system theme changes
+            MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_dark)
+        } else {
+            // Default Google Maps style
+            null
+        }
+    }
+
+    // Keyed on mapStyleOptions so properties recompose when the theme changes
+    val properties by remember(mapStyleOptions) {
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL, mapStyleOptions = mapStyleOptions))
+    }
+
+    val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
+
+    // Default camera position centered on Barcelona
+    val location = LatLng(41.3569, 2.1700)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(location, 13f)
+    }
+
+    // Listens for changes to the selected vehicle!
+    LaunchedEffect(state.selectedVehicle) {
+        if (state.selectedVehicle != null) {
+            val selected = state.vehicles.find { it.id == state.selectedVehicle }
+
+            if (selected != null) {
+                val targetLatLng = LatLng(selected.latitude, selected.longitude)
+                val targetCameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                    targetLatLng,
+                    // Zoom
+                    15f
+                )
+                cameraPositionState.animate(targetCameraUpdate)
+            }
+        }
+    }
+
+    GoogleMap(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState,
+        properties = properties,
+        uiSettings = uiSettings,
+        contentPadding = PaddingValues(bottom = 475.dp)
+    ) {
+        state.vehicles.forEach { vehicle ->
+            val iconRes = when (vehicle.type) {
+                VehicleType.TAXI -> R.drawable.img_taxi
+                VehicleType.RENTAL_CAR -> R.drawable.img_car
+            }
+
+            // Draw the Compose UI exactly at the vehicle's Lat/Lng coordinates
+            MarkerComposable(
+                state = MarkerState(position = LatLng(vehicle.latitude, vehicle.longitude)),
+                title = vehicle.id
+            ) {
+                Image(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = "Vehicle on map",
+                    modifier = Modifier.size(36.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchStepContent(modifier: Modifier = Modifier, onIntent: (BookingViewIntent) -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -221,60 +373,63 @@ private fun BookingSheetContent(onIntent: (BookingViewIntent) -> Unit) {
     }
 }
 
-/**
- * Full-screen Google Map that adapts its style based on the current system theme.
- * Zoom controls are hidden to keep the UI clean even though the user can still pinch to zoom.
- */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewState) {
-    val context = LocalContext.current
-    val isDarkTheme = isSystemInDarkTheme()
+private fun SelectVehicleStepContent(
+    state: BookingViewState,
+    onIntent: (BookingViewIntent) -> Unit,
+    scaffoldState: BottomSheetScaffoldState,
+    modifier: Modifier = Modifier
+) {
+    val titleText = if (scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded) {
+        "Select a way to travel"
+    } else {
+        "Swipe up for more ways to travel"
+    }
 
-    val mapStyleOptions = remember(isDarkTheme) {
-        if (isDarkTheme) {
-            // Custom JSON map style for dark mode to prevent the map
-            // from flashing/re-rendering when the system theme changes
-            MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style_dark)
-        } else {
-            // Default Google Maps style
-            null
+    Column(modifier = modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(FreenowIcons.BackArrow),
+                contentDescription = "Back to Search",
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable { onIntent(BookingViewIntent.BackToSearchClicked) }
+            )
+            Text(
+                text = titleText,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                // The weight pushes the text, the padding offsets the back arrow so it stays perfectly centered
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 24.dp)
+            )
         }
-    }
 
-    // Keyed on mapStyleOptions so properties recompose when the theme changes
-    val properties by remember(mapStyleOptions) {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL, mapStyleOptions = mapStyleOptions))
-    }
+        HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
-    val uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = false)) }
-
-    // Default camera position centered on Barcelona
-    val location = LatLng(41.3569, 2.1700)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(location, 13f)
-    }
-
-    GoogleMap(
-        modifier = modifier,
-        cameraPositionState = cameraPositionState,
-        properties = properties,
-        uiSettings = uiSettings
-    ) {
-        state.vehicles.forEach { vehicle ->
-            val iconRes = when (vehicle.type) {
-                VehicleType.TAXI -> R.drawable.img_taxi
-                VehicleType.RENTAL_CAR -> R.drawable.img_car
-            }
-
-            // Draw the Compose UI exactly at the vehicle's Lat/Lng coordinates
-            MarkerComposable(
-                state = MarkerState(position = LatLng(vehicle.latitude, vehicle.longitude)),
-                title = vehicle.id
-            ) {
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = "Vehicle on map",
-                    modifier = Modifier.size(36.dp)
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(bottom = 100.dp)
+        ) {
+            // Use the UI model from the ViewModel!
+            items(state.vehicleOptions) { option ->
+                FreenowVehicleOptionItem(
+                    title = option.title,
+                    subtitle = option.subtitle,
+                    price = option.price,
+                    iconRes = option.iconRes,
+                    isSelected = state.selectedVehicle == option.id,
+                    onClick = { onIntent(BookingViewIntent.SelectVehicle(option.id)) },
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                 )
             }
         }
@@ -285,6 +440,29 @@ private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewS
 @Composable
 fun BookingSheetContentPreview() {
     FreenowTheme {
-        // BookingSheetContent()
+        BookingScreen(
+            isOffline = false,
+            state = BookingViewState(),
+            onIntent = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BookingSelectVehiclePreview() {
+    FreenowTheme {
+        BookingScreen(
+            isOffline = false,
+            state = BookingViewState(
+                currentStep = BookingStep.SELECT_VEHICLE,
+                vehicles = listOf(
+                    Vehicle(id = "1", type = VehicleType.TAXI, latitude = 41.3569, longitude = 2.1700),
+                    Vehicle(id = "2", type = VehicleType.RENTAL_CAR, latitude = 41.3600, longitude = 2.1750),
+                    Vehicle(id = "3", type = VehicleType.TAXI, latitude = 41.3540, longitude = 2.1680)
+                )
+            ),
+            onIntent = {}
+        )
     }
 }

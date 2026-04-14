@@ -2,11 +2,13 @@ package com.example.freenowdemo.feature.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.freenowdemo.R
 import com.example.freenowdemo.core.data.repository.VehicleRepository
 import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
+import com.example.freenowdemo.feature.booking.state.VehicleUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -69,6 +71,10 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
             is BookingViewIntent.DestinationConfirmed -> {
                 _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
             }
+
+            is BookingViewIntent.BackToSearchClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.SEARCH, selectedVehicle = null) }
+            }
         }
     }
 
@@ -82,10 +88,40 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
             try {
                 val vehicles = repository.getVehicles()
 
+                // Translates raw domain data to formatted UI data
+                val uiOptions = vehicles.mapIndexed { index, vehicle ->
+                    when (index) {
+                        0 -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi Fixed Price",
+                            "in 1 min • 4 seats",
+                            "€16.60",
+                            R.drawable.img_taxi
+                        )
+
+                        1 -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi XL Fixed Price",
+                            "in 3 min • 5-8 seats",
+                            "€21.20",
+                            R.drawable.img_taxi
+                        )
+
+                        else -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi Green",
+                            "in 1 min • 4 seats",
+                            "€16.60",
+                            R.drawable.img_taxi
+                        )
+                    }
+                }
+
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        vehicles = vehicles
+                        vehicles = vehicles,
+                        vehicleOptions = uiOptions
                     )
                 }
             } catch (e: Exception) {
