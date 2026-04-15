@@ -1,7 +1,6 @@
 package com.example.freenowdemo.core.designsystem.component
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,10 +49,22 @@ fun FreenowVehicleOptionItem(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .drawBehind {
+                if (isSelected) {
+                    drawRect(
+                        color = borderColor,
+                        size = Size(6.dp.toPx(), size.height)
+                    )
+                }
+            },
         color = backgroundColor,
-        border = BorderStroke(1.dp, borderColor),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(
+            topStart = 0.dp,
+            bottomStart = 0.dp,
+            topEnd = 12.dp,
+            bottomEnd = 12.dp
+        )
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

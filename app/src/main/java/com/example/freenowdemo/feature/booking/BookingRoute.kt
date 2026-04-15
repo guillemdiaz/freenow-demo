@@ -9,6 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
+import kotlinx.coroutines.delay
 
 /**
  * Smart wrapper for [BookingScreen] that owns the ViewModel, collects state,
@@ -28,11 +29,12 @@ fun BookingRoute(
     val isDestinationSet by savedStateHandle.getStateFlow("destination_set", false).collectAsStateWithLifecycle()
 
     LaunchedEffect(state.currentStep) {
-        onShowBottomBar(state.currentStep == BookingStep.SEARCH)
+        onShowBottomBar(state.currentStep != BookingStep.SELECT_VEHICLE)
     }
 
     LaunchedEffect(isDestinationSet) {
         if (isDestinationSet) {
+            delay(300)
             // Tells the ViewModel to change the UI step
             viewModel.processIntent(BookingViewIntent.DestinationConfirmed)
             // Deletes the message so it doesn't trigger again
@@ -43,7 +45,11 @@ fun BookingRoute(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is BookingViewEffect.NavigateToDestinationSearch -> onNavigateToDestination()
+                is BookingViewEffect.NavigateToDestinationSearch -> {
+                    onNavigateToDestination() // navigate first
+                    onShowBottomBar(false) // hide after
+                }
+
                 is BookingViewEffect.NavigateToSetSavedLocation -> { /* TODO */ }
             }
         }

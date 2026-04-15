@@ -19,4 +19,10 @@
     <string name="pickup">Pickup</string>
     <string name="show_all">Show all</string>
     <string name="current_location">Current location</string>
+    <string name="select_a_way_to_travel">Select a way to travel</string>
+    <string name="swipe_up_for_more">Swipe up for more ways to travel</string>
+    <string name="taxi">Taxi</string>
+    <string name="rent_a_car">Rent a car</string>
+    <string name="vehicle_on_map">Vehicle on map</string>
+    <string name="back_to_search">Back to Search</string>
 </resources>

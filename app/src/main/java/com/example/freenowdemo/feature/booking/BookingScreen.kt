@@ -177,7 +177,7 @@ fun BookingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     text = if (selectedOption != null) "Confirm ${selectedOption.title}" else "Select a ride",
@@ -310,7 +310,7 @@ private fun BookingMapContent(modifier: Modifier = Modifier, state: BookingViewS
             ) {
                 Image(
                     painter = painterResource(id = iconRes),
-                    contentDescription = "Vehicle on map",
+                    contentDescription = stringResource(R.string.vehicle_on_map),
                     modifier = Modifier.size(36.dp)
                 )
             }
@@ -359,13 +359,13 @@ private fun SearchStepContent(modifier: Modifier = Modifier, onIntent: (BookingV
         ) {
             FreenowServiceCard(
                 modifier = Modifier.weight(1f),
-                title = "Taxi",
+                title = stringResource(R.string.taxi),
                 image = R.drawable.img_taxi,
                 onItemClick = { onIntent(BookingViewIntent.ServiceCardClicked("Taxi")) }
             )
             FreenowServiceCard(
                 modifier = Modifier.weight(1f),
-                title = "Rent a car",
+                title = stringResource(R.string.rent_a_car),
                 image = R.drawable.img_car,
                 onItemClick = { onIntent(BookingViewIntent.ServiceCardClicked("Rent a car")) }
             )
@@ -382,9 +382,9 @@ private fun SelectVehicleStepContent(
     modifier: Modifier = Modifier
 ) {
     val titleText = if (scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded) {
-        "Select a way to travel"
+        stringResource(R.string.select_a_way_to_travel)
     } else {
-        "Swipe up for more ways to travel"
+        stringResource(R.string.swipe_up_for_more)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -396,7 +396,7 @@ private fun SelectVehicleStepContent(
         ) {
             Icon(
                 painter = painterResource(FreenowIcons.BackArrow),
-                contentDescription = "Back to Search",
+                contentDescription = stringResource(R.string.back_to_search),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .size(24.dp)
@@ -405,7 +405,6 @@ private fun SelectVehicleStepContent(
             Text(
                 text = titleText,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 // The weight pushes the text, the padding offsets the back arrow so it stays perfectly centered
                 modifier = Modifier
@@ -416,11 +415,16 @@ private fun SelectVehicleStepContent(
 
         HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
+        /*
+        TODO: The LazyColumn currently fights with the BottomSheetScaffold for nested scroll events.
+        A custom draggable sheet or nested scroll interceptor is needed in the future to allow
+        independent list scrolling without expanding/collapsing the sheet.
+         */
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 100.dp)
         ) {
-            // Use the UI model from the ViewModel!
+            // Uses the UI model from the ViewModel
             items(state.vehicleOptions) { option ->
                 FreenowVehicleOptionItem(
                     title = option.title,

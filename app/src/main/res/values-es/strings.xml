@@ -20,4 +20,10 @@
     <string name="pickup">Origen</string>
     <string name="show_all">Mostrar todos</string>
     <string name="current_location">Ubicación actual</string>
+    <string name="select_a_way_to_travel">Elige tu viaje</string>
+    <string name="swipe_up_for_more">Desliza para ver más</string>
+    <string name="taxi">Taxi</string>
+    <string name="rent_a_car">Alquilar un coche</string>
+    <string name="vehicle_on_map">Vehículo en el mapa</string>
+    <string name="back_to_search">Volver a la búsqueda</string>
 </resources>

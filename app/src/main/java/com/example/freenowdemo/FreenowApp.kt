@@ -89,7 +89,10 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
         NavHost(
             navController = navController,
             startDestination = NavDestination.Home.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(
+                top = innerPadding.calculateTopPadding(),
+                bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp
+            )
         ) {
             composable(NavDestination.Home.route) { backStackEntry ->
                 BookingRoute(
