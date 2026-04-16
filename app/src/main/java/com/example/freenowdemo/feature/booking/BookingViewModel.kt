@@ -2,10 +2,13 @@ package com.example.freenowdemo.feature.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.freenowdemo.R
 import com.example.freenowdemo.core.data.repository.VehicleRepository
+import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
+import com.example.freenowdemo.feature.booking.state.VehicleUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +24,6 @@ import kotlinx.coroutines.launch
  * - Holds and exposes the [BookingViewState] as an observable [StateFlow].
  * - Processes user [BookingViewIntent]s and translates them into state mutations or side effects.
  * - Emits one-shot [BookingViewEffect]s via a [Channel].
- * Injected via Hilt, the repository dependency is put out until the real implementation is wired in.
  */
 @HiltViewModel
 class BookingViewModel @Inject constructor(private val repository: VehicleRepository) : ViewModel() {
@@ -65,6 +67,28 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
                     _effect.send(BookingViewEffect.NavigateToSetSavedLocation(locationType = intent.locationType))
                 }
             }
+
+            is BookingViewIntent.DestinationConfirmed -> {
+                _state.update {
+                    it.copy(
+                        currentStep = BookingStep.SELECT_VEHICLE,
+                        pickupLocation = intent.pickup,
+                        dropoffLocation = intent.dropoff
+                    )
+                }
+            }
+
+            is BookingViewIntent.BackToSearchClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.SEARCH, selectedVehicle = null) }
+            }
+
+            is BookingViewIntent.ConfirmRideClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.CONFIRM_RIDE) }
+            }
+
+            is BookingViewIntent.BackToVehicleSelectionClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
+            }
         }
     }
 
@@ -78,10 +102,41 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
             try {
                 val vehicles = repository.getVehicles()
 
+                // Translates raw domain data to formatted UI data
+                // TODO: extract to a VehicleUiMapper
+                val uiOptions = vehicles.mapIndexed { index, vehicle ->
+                    when (index) {
+                        0 -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi Fixed Price",
+                            "in 1 min • 4 seats",
+                            "€16.60",
+                            R.drawable.img_taxi
+                        )
+
+                        1 -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi XL Fixed Price",
+                            "in 3 min • 5-8 seats",
+                            "€21.20",
+                            R.drawable.img_taxi
+                        )
+
+                        else -> VehicleUiModel(
+                            vehicle.id,
+                            "Taxi Green",
+                            "in 1 min • 4 seats",
+                            "€16.60",
+                            R.drawable.img_taxi
+                        )
+                    }
+                }
+
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        vehicles = vehicles
+                        vehicles = vehicles,
+                        vehicleOptions = uiOptions
                     )
                 }
             } catch (e: Exception) {

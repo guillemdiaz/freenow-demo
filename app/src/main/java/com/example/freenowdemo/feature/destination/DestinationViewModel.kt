@@ -43,7 +43,12 @@ class DestinationViewModel @Inject constructor() : ViewModel() {
 
             is DestinationViewIntent.ConfirmClicked -> {
                 viewModelScope.launch {
-                    _effect.send(DestinationViewEffect.NavigateBackWithResult)
+                    _effect.send(
+                        DestinationViewEffect.NavigateBackWithResult(
+                            pickup = _state.value.pickupText,
+                            dropoff = _state.value.dropoffText
+                        )
+                    )
                 }
             }
         }
