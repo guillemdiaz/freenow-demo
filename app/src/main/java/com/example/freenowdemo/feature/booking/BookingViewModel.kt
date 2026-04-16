@@ -69,11 +69,25 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
             }
 
             is BookingViewIntent.DestinationConfirmed -> {
-                _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
+                _state.update {
+                    it.copy(
+                        currentStep = BookingStep.SELECT_VEHICLE,
+                        pickupLocation = intent.pickup,
+                        dropoffLocation = intent.dropoff
+                    )
+                }
             }
 
             is BookingViewIntent.BackToSearchClicked -> {
                 _state.update { it.copy(currentStep = BookingStep.SEARCH, selectedVehicle = null) }
+            }
+
+            is BookingViewIntent.ConfirmRideClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.CONFIRM_RIDE) }
+            }
+
+            is BookingViewIntent.BackToVehicleSelectionClicked -> {
+                _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
             }
         }
     }
@@ -89,6 +103,7 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
                 val vehicles = repository.getVehicles()
 
                 // Translates raw domain data to formatted UI data
+                // TODO: extract to a VehicleUiMapper
                 val uiOptions = vehicles.mapIndexed { index, vehicle ->
                     when (index) {
                         0 -> VehicleUiModel(

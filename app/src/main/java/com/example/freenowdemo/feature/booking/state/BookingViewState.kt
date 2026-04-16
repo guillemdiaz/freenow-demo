@@ -18,5 +18,7 @@ data class BookingViewState(
     val vehicles: List<Vehicle> = emptyList(),
     val vehicleOptions: List<VehicleUiModel> = emptyList(),
     val selectedVehicle: String? = null,
-    val currentStep: BookingStep = BookingStep.SEARCH
+    val currentStep: BookingStep = BookingStep.SEARCH,
+    val pickupLocation: String? = null,
+    val dropoffLocation: String? = null
 )

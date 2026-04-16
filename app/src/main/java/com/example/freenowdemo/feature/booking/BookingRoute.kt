@@ -2,6 +2,7 @@ package com.example.freenowdemo.feature.booking
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -27,18 +28,22 @@ fun BookingRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isDestinationSet by savedStateHandle.getStateFlow("destination_set", false).collectAsStateWithLifecycle()
+    val pickupText by savedStateHandle.getStateFlow("pickup_text", "").collectAsStateWithLifecycle()
+    val dropoffText by savedStateHandle.getStateFlow("dropoff_text", "").collectAsStateWithLifecycle()
 
-    LaunchedEffect(state.currentStep) {
-        onShowBottomBar(state.currentStep != BookingStep.SELECT_VEHICLE)
+    SideEffect {
+        onShowBottomBar(state.currentStep == BookingStep.SEARCH)
     }
 
     LaunchedEffect(isDestinationSet) {
         if (isDestinationSet) {
             delay(300)
             // Tells the ViewModel to change the UI step
-            viewModel.processIntent(BookingViewIntent.DestinationConfirmed)
-            // Deletes the message so it doesn't trigger again
+            viewModel.processIntent(BookingViewIntent.DestinationConfirmed(pickupText, dropoffText))
+            // Deletes the messages so they don't trigger again
             savedStateHandle.remove<Boolean>("destination_set")
+            savedStateHandle.remove<String>("pickup_text")
+            savedStateHandle.remove<String>("dropoff_text")
         }
     }
 

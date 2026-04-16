@@ -5,5 +5,5 @@ package com.example.freenowdemo.feature.destination.state
  * exactly once.
  */
 sealed class DestinationViewEffect {
-    object NavigateBackWithResult : DestinationViewEffect()
+    data class NavigateBackWithResult(val pickup: String, val dropoff: String) : DestinationViewEffect()
 }

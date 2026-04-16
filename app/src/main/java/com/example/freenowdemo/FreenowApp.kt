@@ -42,7 +42,8 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     var bottomBarVisible by remember { mutableStateOf(true) }
-    val showBottomBar = topLevelDestinations.any { it.destination.route == currentRoute } && bottomBarVisible
+    val showBottomBar =
+        topLevelDestinations.any { it.destination.route == currentRoute } && bottomBarVisible && !isOffline
 
     Scaffold(
         bottomBar = {
@@ -108,9 +109,13 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                 DestinationRoute(
                     isOffline = isOffline,
                     onNavigateBack = { navController.popBackStack() },
-                    onNavigateBackWithResult = {
+                    onNavigateBackWithResult = { pickup, dropoff ->
                         val previousEntry = navController.previousBackStackEntry
-                        previousEntry?.savedStateHandle?.set("destination_set", true)
+                        previousEntry?.savedStateHandle?.apply {
+                            set("destination_set", true)
+                            set("pickup_text", pickup)
+                            set("dropoff_text", dropoff)
+                        }
                         navController.popBackStack()
                     }
                 )

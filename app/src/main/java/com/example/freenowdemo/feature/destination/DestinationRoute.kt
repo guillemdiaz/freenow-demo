@@ -15,7 +15,7 @@ import com.example.freenowdemo.feature.destination.state.DestinationViewEffect
 fun DestinationRoute(
     isOffline: Boolean,
     onNavigateBack: () -> Unit,
-    onNavigateBackWithResult: () -> Unit,
+    onNavigateBackWithResult: (String, String) -> Unit,
     viewModel: DestinationViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -23,7 +23,9 @@ fun DestinationRoute(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is DestinationViewEffect.NavigateBackWithResult -> onNavigateBackWithResult()
+                is DestinationViewEffect.NavigateBackWithResult -> {
+                    onNavigateBackWithResult(effect.pickup, effect.dropoff)
+                }
             }
         }
     }
