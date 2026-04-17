@@ -29,4 +29,7 @@
     <string name="select_a_ride">Seleccionar un viaje</string>
     <string name="confirm">Confirmar %1$s</string>
     <string name="order_now">Solicitar ahora</string>
+    <string name="ride_confirmed">¡Viaje confirmado!</string>
+    <string name="success">Éxito</string>
+    <string name="driver_on_the_way">Tu %1$s está en camino. Te avisaremos cuando llegue.</string>
 </resources>

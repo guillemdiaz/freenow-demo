@@ -96,6 +96,8 @@ class BookingViewModel @Inject constructor(
             }
 
             is BookingViewIntent.OrderRideClicked -> orderRide()
+
+            is BookingViewIntent.DismissSuccessDialog -> resetBookingState()
         }
     }
 
@@ -187,12 +189,21 @@ class BookingViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     isLoading = false,
-                    currentStep = BookingStep.SEARCH,
-                    selectedVehicle = null,
-                    pickupLocation = null,
-                    dropoffLocation = null
+                    isRideBooked = true
                 )
             }
+        }
+    }
+
+    private fun resetBookingState() {
+        _state.update {
+            it.copy(
+                isRideBooked = false,
+                currentStep = BookingStep.SEARCH,
+                selectedVehicle = null,
+                pickupLocation = null,
+                dropoffLocation = null
+            )
         }
     }
 }

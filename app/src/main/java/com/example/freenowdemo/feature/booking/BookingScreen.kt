@@ -34,6 +34,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -70,6 +72,7 @@ import com.example.freenowdemo.core.model.VehicleType
 import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewIntent
 import com.example.freenowdemo.feature.booking.state.BookingViewState
+import com.example.freenowdemo.feature.booking.state.VehicleUiModel
 import com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -232,6 +235,71 @@ fun BookingScreen(
                     isVisible = true,
                     onRetryClick = { onIntent(BookingViewIntent.LoadVehicles) }
                 )
+            }
+        }
+        if (state.isRideBooked) {
+            Dialog(onDismissRequest = { onIntent(BookingViewIntent.DismissSuccessDialog) }) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    RoundedCornerShape(50)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(FreenowIcons.Check),
+                                contentDescription = stringResource(R.string.success),
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(R.string.ride_confirmed),
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        val selectedVehicle = state.vehicleOptions.find { it.id == state.selectedVehicle }
+                        Text(
+                            text = stringResource(R.string.driver_on_the_way, selectedVehicle?.title ?: "driver"),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Button(
+                            onClick = { onIntent(BookingViewIntent.DismissSuccessDialog) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .padding(horizontal = 48.dp),
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text(stringResource(R.string.back_to_search), fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
             }
         }
     }
@@ -397,7 +465,7 @@ private fun SearchStepContent(modifier: Modifier = Modifier, onIntent: (BookingV
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.rent_a_car),
                 image = R.drawable.img_car,
-                onItemClick = { onIntent(BookingViewIntent.ServiceCardClicked("Rent a car")) }
+                onItemClick = { /* TODO */ }
             )
         }
     }
@@ -616,14 +684,14 @@ fun BookingSelectVehiclePreview() {
                 currentStep = BookingStep.SELECT_VEHICLE,
                 vehicleOptions = listOf(
                     // Fake UI models for the preview
-                    com.example.freenowdemo.feature.booking.state.VehicleUiModel(
+                    VehicleUiModel(
                         "1",
                         "Taxi Fixed Price",
                         "in 1 min • 4 seats",
                         "€16.60",
                         R.drawable.img_taxi
                     ),
-                    com.example.freenowdemo.feature.booking.state.VehicleUiModel(
+                    VehicleUiModel(
                         "2",
                         "Taxi XL",
                         "in 3 min • 6 seats",
@@ -649,7 +717,7 @@ fun BookingConfirmRidePreview() {
                 pickupLocation = "Sagrada Familia",
                 dropoffLocation = "Barcelona Airport (BCN)",
                 vehicleOptions = listOf(
-                    com.example.freenowdemo.feature.booking.state.VehicleUiModel(
+                    VehicleUiModel(
                         "1",
                         "Taxi Fixed Price",
                         "in 1 min • 4 seats",
@@ -658,6 +726,33 @@ fun BookingConfirmRidePreview() {
                     )
                 ),
                 selectedVehicle = "1"
+            ),
+            onIntent = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BookingRideBookedPreview() {
+    FreenowTheme {
+        BookingScreen(
+            isOffline = false,
+            state = BookingViewState(
+                currentStep = BookingStep.CONFIRM_RIDE,
+                pickupLocation = "Sagrada Familia",
+                dropoffLocation = "Barcelona Airport (BCN)",
+                vehicleOptions = listOf(
+                    VehicleUiModel(
+                        "1",
+                        "Taxi Fixed Price",
+                        "in 1 min • 4 seats",
+                        "€16.60",
+                        R.drawable.img_taxi
+                    )
+                ),
+                selectedVehicle = "1",
+                isRideBooked = true
             ),
             onIntent = {}
         )

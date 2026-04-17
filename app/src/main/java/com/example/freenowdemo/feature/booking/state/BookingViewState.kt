@@ -15,6 +15,7 @@ data class VehicleUiModel(val id: String, val title: String, val subtitle: Strin
  */
 data class BookingViewState(
     val isLoading: Boolean = false,
+    val isRideBooked: Boolean = false,
     val vehicles: List<Vehicle> = emptyList(),
     val vehicleOptions: List<VehicleUiModel> = emptyList(),
     val selectedVehicle: String? = null,
