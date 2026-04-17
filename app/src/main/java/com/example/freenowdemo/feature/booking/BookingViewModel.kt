@@ -3,6 +3,7 @@ package com.example.freenowdemo.feature.booking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.freenowdemo.R
+import com.example.freenowdemo.core.analytics.AnalyticsTracker
 import com.example.freenowdemo.core.data.repository.VehicleRepository
 import com.example.freenowdemo.feature.booking.state.BookingStep
 import com.example.freenowdemo.feature.booking.state.BookingViewEffect
@@ -12,6 +13,7 @@ import com.example.freenowdemo.feature.booking.state.VehicleUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,7 +28,10 @@ import kotlinx.coroutines.launch
  * - Emits one-shot [BookingViewEffect]s via a [Channel].
  */
 @HiltViewModel
-class BookingViewModel @Inject constructor(private val repository: VehicleRepository) : ViewModel() {
+class BookingViewModel @Inject constructor(
+    private val repository: VehicleRepository,
+    private val analyticsTracker: AnalyticsTracker
+) : ViewModel() {
     private val _state = MutableStateFlow(BookingViewState())
     val state = _state.asStateFlow()
 
@@ -89,6 +94,10 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
             is BookingViewIntent.BackToVehicleSelectionClicked -> {
                 _state.update { it.copy(currentStep = BookingStep.SELECT_VEHICLE) }
             }
+
+            is BookingViewIntent.OrderRideClicked -> orderRide()
+
+            is BookingViewIntent.DismissSuccessDialog -> resetBookingState()
         }
     }
 
@@ -150,5 +159,51 @@ class BookingViewModel @Inject constructor(private val repository: VehicleReposi
      */
     private fun selectVehicle(vehicleId: String) {
         _state.update { it.copy(selectedVehicle = vehicleId) }
+    }
+
+    /**
+     * Triggers the final checkout process.
+     */
+    private fun orderRide() {
+        val currentState = _state.value
+        val vehicleId = currentState.selectedVehicle ?: return
+        val vehicle = currentState.vehicleOptions.find { it.id == vehicleId }
+
+        analyticsTracker.trackEvent(
+            eventName = "Ride_Booked",
+            parameters = mapOf(
+                "vehicle_type" to (vehicle?.title ?: "Unknown"),
+                "pickup" to (currentState.pickupLocation ?: "Current Location"),
+                "dropoff" to (currentState.dropoffLocation ?: "Destination"),
+                "price" to (vehicle?.price ?: "Unknown")
+            )
+        )
+
+        _state.update { it.copy(isLoading = true) }
+
+        // Simulates a network request
+        viewModelScope.launch {
+            delay(2500)
+
+            // On success, resets the flow back to the beginning!
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    isRideBooked = true
+                )
+            }
+        }
+    }
+
+    private fun resetBookingState() {
+        _state.update {
+            it.copy(
+                isRideBooked = false,
+                currentStep = BookingStep.SEARCH,
+                selectedVehicle = null,
+                pickupLocation = null,
+                dropoffLocation = null
+            )
+        }
     }
 }

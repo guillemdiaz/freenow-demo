@@ -23,4 +23,5 @@ object FreenowIcons {
     val NavigationArrow = R.drawable.ic_navigation
     val Add = R.drawable.ic_add_circle
     val Map = R.drawable.ic_map
+    val Check = R.drawable.ic_check
 }
