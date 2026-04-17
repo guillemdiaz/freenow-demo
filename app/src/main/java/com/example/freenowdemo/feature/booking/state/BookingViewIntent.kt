@@ -13,4 +13,5 @@ sealed class BookingViewIntent {
     object BackToSearchClicked : BookingViewIntent()
     object ConfirmRideClicked : BookingViewIntent()
     object BackToVehicleSelectionClicked : BookingViewIntent()
+    object OrderRideClicked : BookingViewIntent()
 }

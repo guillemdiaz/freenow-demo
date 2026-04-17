@@ -152,7 +152,7 @@ fun BookingScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 475.dp)
+                            .padding(bottom = peekHeight)
                             .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center
                     ) {
@@ -187,7 +187,7 @@ fun BookingScreen(
             Button(
                 onClick = {
                     if (isConfirmStep) {
-                        /* TODO: onIntent() */
+                        onIntent(BookingViewIntent.OrderRideClicked)
                     } else {
                         onIntent(BookingViewIntent.ConfirmRideClicked)
                     }
