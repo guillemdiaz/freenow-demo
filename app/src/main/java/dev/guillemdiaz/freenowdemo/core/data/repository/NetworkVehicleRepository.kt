@@ -1,5 +1,6 @@
 package dev.guillemdiaz.freenowdemo.core.data.repository
 
+import dev.guillemdiaz.freenowdemo.core.model.Result
 import dev.guillemdiaz.freenowdemo.core.model.Vehicle
 import dev.guillemdiaz.freenowdemo.core.model.VehicleType
 import dev.guillemdiaz.freenowdemo.core.network.VehicleApiService
@@ -14,10 +15,10 @@ class NetworkVehicleRepository @Inject constructor(private val apiService: Vehic
     /**
      * Fetches the list of available vehicles from the remote API and maps them to domain models.
      */
-    override suspend fun getVehicles(): List<Vehicle> {
+    override suspend fun getVehicles(): Result<List<Vehicle>> = try {
         val response = apiService.getVehicles()
 
-        return response.poiList.map { networkVehicle ->
+        val vehicles = response.poiList.map { networkVehicle ->
             Vehicle(
                 id = networkVehicle.id,
                 latitude = networkVehicle.coordinate.latitude,
@@ -29,5 +30,8 @@ class NetworkVehicleRepository @Inject constructor(private val apiService: Vehic
                 }
             )
         }
+        Result.Success(vehicles)
+    } catch (e: Exception) {
+        Result.Error(e)
     }
 }

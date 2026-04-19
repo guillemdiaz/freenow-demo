@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.guillemdiaz.freenowdemo.core.analytics.AnalyticsTracker
 import dev.guillemdiaz.freenowdemo.core.data.repository.VehicleRepository
+import dev.guillemdiaz.freenowdemo.core.model.Result
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingStep
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewEffect
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewIntent
@@ -106,21 +107,25 @@ class BookingViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            try {
-                val vehicles = repository.getVehicles()
-
-                // Translates raw domain data to formatted UI data
-                val uiOptions = vehicles.mapIndexed { index, vehicle -> vehicle.toUiModel(index) }
-
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        vehicles = vehicles,
-                        vehicleOptions = uiOptions
-                    )
+            when (val result = repository.getVehicles()) {
+                is Result.Success -> {
+                    val uiOptions = result.data.mapIndexed { index, vehicle ->
+                        vehicle.toUiModel(index)
+                    }
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            vehicles = result.data,
+                            vehicleOptions = uiOptions
+                        )
+                    }
                 }
-            } catch (e: Exception) {
-                _state.update { it.copy(isLoading = false) }
+
+                is Result.Error -> {
+                    _state.update { it.copy(isLoading = false) }
+                }
+
+                is Result.Loading -> Unit
             }
         }
     }
