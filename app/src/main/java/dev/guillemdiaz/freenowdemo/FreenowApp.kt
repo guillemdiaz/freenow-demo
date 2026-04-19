@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -39,25 +40,29 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
     var bottomBarVisible by remember { mutableStateOf(true) }
     val showBottomBar =
-        topLevelDestinations.any { it.destination.route == currentRoute } && bottomBarVisible && !isOffline
+        topLevelDestinations.any {
+            currentDestination?.hasRoute(it.destination::class) == true
+        } &&
+            bottomBarVisible &&
+            !isOffline
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
                 FreenowNavigationBar {
                     topLevelDestinations.forEach { destination ->
-                        val selected = currentRoute == destination.destination.route
+                        val selected = currentDestination?.hasRoute(destination.destination::class) == true
                         FreenowNavigationBarItem(
                             selected = selected,
                             onClick = {
-                                navController.navigate(destination.destination.route) {
+                                navController.navigate(destination.destination) {
                                     // Pop back to home to avoid building up a large back stack
                                     // when the user switches between tabs repeatedly
-                                    popUpTo(NavDestination.Home.route) {
+                                    popUpTo<NavDestination.Home> {
                                         saveState = true
                                     }
                                     launchSingleTop = true
@@ -89,23 +94,23 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = NavDestination.Home.route,
+            startDestination = NavDestination.Home,
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding(),
                 bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp
             )
         ) {
-            composable(NavDestination.Home.route) { backStackEntry ->
+            composable<NavDestination.Home> { backStackEntry ->
                 BookingRoute(
                     isOffline = isOffline,
                     savedStateHandle = backStackEntry.savedStateHandle,
                     onShowBottomBar = { bottomBarVisible = it },
                     onNavigateToDestination = {
-                        navController.navigate(NavDestination.Destination.route)
+                        navController.navigate(NavDestination.Destination)
                     }
                 )
             }
-            composable(NavDestination.Destination.route) {
+            composable<NavDestination.Destination> {
                 DestinationRoute(
                     isOffline = isOffline,
                     onNavigateBack = { navController.popBackStack() },
@@ -120,9 +125,9 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                     }
                 )
             }
-            composable(NavDestination.Trips.route) { /* Left blank */ }
-            composable(NavDestination.Wallet.route) { /* Left blank */ }
-            composable(NavDestination.Account.route) { /* Left blank */ }
+            composable<NavDestination.Trips> { /* Left blank */ }
+            composable<NavDestination.Wallet> { /* Left blank */ }
+            composable<NavDestination.Account> { /* Left blank */ }
         }
     }
 }
