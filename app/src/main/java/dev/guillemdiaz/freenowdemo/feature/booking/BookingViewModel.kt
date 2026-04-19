@@ -3,14 +3,12 @@ package dev.guillemdiaz.freenowdemo.feature.booking
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.guillemdiaz.freenowdemo.R
 import dev.guillemdiaz.freenowdemo.core.analytics.AnalyticsTracker
 import dev.guillemdiaz.freenowdemo.core.data.repository.VehicleRepository
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingStep
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewEffect
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewIntent
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewState
-import dev.guillemdiaz.freenowdemo.feature.booking.state.VehicleUiModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -112,34 +110,7 @@ class BookingViewModel @Inject constructor(
                 val vehicles = repository.getVehicles()
 
                 // Translates raw domain data to formatted UI data
-                // TODO: extract to a VehicleUiMapper
-                val uiOptions = vehicles.mapIndexed { index, vehicle ->
-                    when (index) {
-                        0 -> VehicleUiModel(
-                            vehicle.id,
-                            "Taxi Fixed Price",
-                            "in 1 min • 4 seats",
-                            "€16.60",
-                            R.drawable.img_taxi
-                        )
-
-                        1 -> VehicleUiModel(
-                            vehicle.id,
-                            "Taxi XL Fixed Price",
-                            "in 3 min • 5-8 seats",
-                            "€21.20",
-                            R.drawable.img_taxi
-                        )
-
-                        else -> VehicleUiModel(
-                            vehicle.id,
-                            "Taxi Green",
-                            "in 1 min • 4 seats",
-                            "€16.60",
-                            R.drawable.img_taxi
-                        )
-                    }
-                }
+                val uiOptions = vehicles.mapIndexed { index, vehicle -> vehicle.toUiModel(index) }
 
                 _state.update {
                     it.copy(
