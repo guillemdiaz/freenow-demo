@@ -15,18 +15,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import dev.guillemdiaz.freenowdemo.core.designsystem.component.FreenowNavigationBar
 import dev.guillemdiaz.freenowdemo.core.designsystem.component.FreenowNavigationBarItem
 import dev.guillemdiaz.freenowdemo.core.network.NetworkMonitor
 import dev.guillemdiaz.freenowdemo.feature.booking.BookingRoute
 import dev.guillemdiaz.freenowdemo.feature.destination.DestinationRoute
 import dev.guillemdiaz.freenowdemo.ui.navigation.NavDestination
-import dev.guillemdiaz.freenowdemo.ui.navigation.topLevelDestinations
 
 /**
  * Root composable of the app. Sets up the navigation controller, bottom navigation bar,
@@ -37,38 +34,21 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
     val appState = rememberFreenowAppState(networkMonitor = networkMonitor)
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
 
-    val navController = rememberNavController()
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    // Observe back stack so Compose recomposes when destination changes
+    val navBackStackEntry by appState.navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     var bottomBarVisible by remember { mutableStateOf(true) }
-    val showBottomBar =
-        topLevelDestinations.any {
-            currentDestination?.hasRoute(it.destination::class) == true
-        } &&
-            bottomBarVisible &&
-            !isOffline
+    val showBottomBar = appState.shouldShowBottomBar(currentDestination, isOffline, bottomBarVisible)
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
                 FreenowNavigationBar {
-                    topLevelDestinations.forEach { destination ->
-                        val selected = currentDestination?.hasRoute(destination.destination::class) == true
+                    appState.topLevelDestinations.forEach { destination ->
                         FreenowNavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(destination.destination) {
-                                    // Pop back to home to avoid building up a large back stack
-                                    // when the user switches between tabs repeatedly
-                                    popUpTo<NavDestination.Home> {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
+                            selected = appState.isDestinationSelected(currentDestination, destination),
+                            onClick = { appState.navigateToTopLevelDestination(destination) },
                             icon = {
                                 Icon(
                                     painter = painterResource(destination.icon),
@@ -83,9 +63,7 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                                     modifier = Modifier.size(24.dp)
                                 )
                             },
-                            label = {
-                                Text(stringResource(destination.label))
-                            }
+                            label = { Text(stringResource(destination.label)) }
                         )
                     }
                 }
@@ -93,7 +71,7 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
         }
     ) { innerPadding ->
         NavHost(
-            navController = navController,
+            navController = appState.navController,
             startDestination = NavDestination.Home,
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding(),
@@ -106,22 +84,22 @@ fun FreenowApp(networkMonitor: NetworkMonitor) {
                     savedStateHandle = backStackEntry.savedStateHandle,
                     onShowBottomBar = { bottomBarVisible = it },
                     onNavigateToDestination = {
-                        navController.navigate(NavDestination.Destination)
+                        appState.navController.navigate(NavDestination.Destination)
                     }
                 )
             }
             composable<NavDestination.Destination> {
                 DestinationRoute(
                     isOffline = isOffline,
-                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateBack = { appState.navController.popBackStack() },
                     onNavigateBackWithResult = { pickup, dropoff ->
-                        val previousEntry = navController.previousBackStackEntry
+                        val previousEntry = appState.navController.previousBackStackEntry
                         previousEntry?.savedStateHandle?.apply {
                             set("destination_set", true)
                             set("pickup_text", pickup)
                             set("dropoff_text", dropoff)
                         }
-                        navController.popBackStack()
+                        appState.navController.popBackStack()
                     }
                 )
             }
