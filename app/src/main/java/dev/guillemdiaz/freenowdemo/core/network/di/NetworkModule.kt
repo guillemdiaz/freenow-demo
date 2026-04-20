@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.guillemdiaz.freenowdemo.BuildConfig
 import dev.guillemdiaz.freenowdemo.core.network.VehicleApiService
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
@@ -43,7 +44,11 @@ object NetworkModule {
     fun provideOkHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             // Logs the full JSON body to Logcat
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
         }
 
         return OkHttpClient.Builder()
