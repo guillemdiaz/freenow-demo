@@ -556,14 +556,14 @@ private fun ConfirmRideStepContent(
         ) {
             Icon(
                 painter = painterResource(FreenowIcons.BackArrow),
-                contentDescription = "Back to selection",
+                contentDescription = stringResource(R.string.back_to_selection),
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
                     .size(24.dp)
                     .clickable { onIntent(BookingViewIntent.BackToVehicleSelectionClicked) }
             )
             Text(
-                text = "Confirm your ride",
+                text = stringResource(R.string.confirm_ride),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -606,13 +606,15 @@ private fun ConfirmRideStepContent(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = state.pickupLocation?.takeIf { it.isNotBlank() } ?: "Current Location",
+                    text = state.pickupLocation?.takeIf { it.isNotBlank() } ?: stringResource(
+                        R.string.current_location
+                    ),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(18.dp))
                 Text(
-                    text = state.dropoffLocation?.takeIf { it.isNotBlank() } ?: "Destination",
+                    text = state.dropoffLocation?.takeIf { it.isNotBlank() } ?: stringResource(R.string.destination),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface

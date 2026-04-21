@@ -32,4 +32,7 @@
     <string name="ride_confirmed">¡Viaje confirmado!</string>
     <string name="success">Éxito</string>
     <string name="driver_on_the_way">Tu %1$s está en camino. Te avisaremos cuando llegue.</string>
+    <string name="destination">Destino</string>
+    <string name="confirm_ride">Confirma tu viaje</string>
+    <string name="back_to_selection">Volver al inicio</string>
 </resources>

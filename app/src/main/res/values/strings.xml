@@ -31,4 +31,7 @@
     <string name="ride_confirmed">Ride Confirmed!</string>
     <string name="success">Success</string>
     <string name="driver_on_the_way">Your %1$s is on the way. We\'ll notify you when they arrive.</string>
+    <string name="destination">Destination</string>
+    <string name="confirm_ride">Confirm your ride</string>
+    <string name="back_to_selection">Back to selection</string>
 </resources>
