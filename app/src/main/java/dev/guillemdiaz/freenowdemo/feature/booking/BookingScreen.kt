@@ -147,6 +147,11 @@ fun BookingScreen(
             Box(modifier = Modifier.fillMaxSize()) {
                 BookingMapContent(modifier = Modifier.fillMaxSize(), state = state)
 
+                // Load the JSON file from res/raw
+                val composition by rememberLottieComposition(
+                    LottieCompositionSpec.RawRes(R.raw.lottie_animation)
+                )
+
                 AnimatedVisibility(
                     visible = state.isLoading,
                     enter = fadeIn(),
@@ -159,11 +164,6 @@ fun BookingScreen(
                             .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Load the JSON file from res/raw
-                        val composition by rememberLottieComposition(
-                            LottieCompositionSpec.RawRes(R.raw.lottie_animation)
-                        )
-
                         LottieAnimation(
                             composition = composition,
                             iterations = LottieConstants.IterateForever,
