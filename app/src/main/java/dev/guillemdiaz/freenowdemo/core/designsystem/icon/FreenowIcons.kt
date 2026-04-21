@@ -12,8 +12,8 @@ object FreenowIcons {
     val SelectedTrips = R.drawable.ic_trips_filled
     val Wallet = R.drawable.ic_wallet
     val SelectedWallet = R.drawable.ic_wallet_filled
-    val Account = R.drawable.ic_account_filled
-    val SelectedAccount = R.drawable.ic_account
+    val Account = R.drawable.ic_account
+    val SelectedAccount = R.drawable.ic_account_filled
     val Search = R.drawable.ic_search
     val Work = R.drawable.ic_work
     val Calendar = R.drawable.ic_calendar
