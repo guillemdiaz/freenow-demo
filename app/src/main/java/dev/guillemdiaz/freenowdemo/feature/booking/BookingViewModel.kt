@@ -105,27 +105,29 @@ class BookingViewModel @Inject constructor(
      */
     private fun loadVehicles() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-
-            when (val result = repository.getVehicles()) {
-                is Result.Success -> {
-                    val uiOptions = result.data.mapIndexed { index, vehicle ->
-                        vehicle.toUiModel(index)
+            repository.getVehicles().collect { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        _state.update { it.copy(isLoading = true) }
                     }
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            vehicles = result.data,
-                            vehicleOptions = uiOptions
-                        )
+
+                    is Result.Success -> {
+                        val uiOptions = result.data.mapIndexed { index, vehicle ->
+                            vehicle.toUiModel(index)
+                        }
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                vehicles = result.data,
+                                vehicleOptions = uiOptions
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _state.update { it.copy(isLoading = false) }
                     }
                 }
-
-                is Result.Error -> {
-                    _state.update { it.copy(isLoading = false) }
-                }
-
-                is Result.Loading -> Unit
             }
         }
     }
