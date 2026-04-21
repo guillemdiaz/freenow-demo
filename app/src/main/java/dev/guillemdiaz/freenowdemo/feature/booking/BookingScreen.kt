@@ -84,6 +84,8 @@ import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingStep
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewIntent
 import dev.guillemdiaz.freenowdemo.feature.booking.state.BookingViewState
 import dev.guillemdiaz.freenowdemo.feature.booking.state.VehicleUiModel
+import java.text.NumberFormat
+import java.util.Locale
 
 private val DEFAULT_LOCATION = LatLng(41.3820, 2.1680)
 private const val DEFAULT_ZOOM = 13f
@@ -204,10 +206,9 @@ fun BookingScreen(
                 Text(
                     text = if (isConfirmStep) {
                         stringResource(R.string.order_now)
-                    } else if (selectedOption !=
-                        null
-                    ) {
-                        stringResource(R.string.confirm, selectedOption.title)
+                    } else if (selectedOption != null) {
+                        val vehicleTitle = stringResource(id = selectedOption.titleRes)
+                        stringResource(R.string.confirm, vehicleTitle)
                     } else {
                         stringResource(R.string.select_a_ride)
                     },
@@ -279,8 +280,10 @@ fun BookingScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         val selectedVehicle = state.vehicleOptions.find { it.id == state.selectedVehicle }
+                        val vehicleName = selectedVehicle?.let { stringResource(id = it.titleRes) }
+                            ?: R.string.driver
                         Text(
-                            text = stringResource(R.string.driver_on_the_way, selectedVehicle?.title ?: "driver"),
+                            text = stringResource(R.string.driver_on_the_way, vehicleName),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -525,9 +528,9 @@ private fun SelectVehicleStepContent(
             // Uses the UI model from the ViewModel
             items(state.vehicleOptions) { option ->
                 FreenowVehicleOptionItem(
-                    title = option.title,
+                    title = stringResource(id = option.titleRes),
                     subtitle = option.subtitle,
-                    price = option.price,
+                    price = formatPrice(option.price),
                     iconRes = option.iconRes,
                     isSelected = state.selectedVehicle == option.id,
                     onClick = { onIntent(BookingViewIntent.SelectVehicle(option.id)) },
@@ -642,7 +645,7 @@ private fun ConfirmRideStepContent(
                     Spacer(modifier = Modifier.width(24.dp))
                     Column {
                         Text(
-                            text = selectedOption.title,
+                            text = stringResource(id = selectedOption.titleRes),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -655,13 +658,18 @@ private fun ConfirmRideStepContent(
                 }
                 Text(
                     modifier = Modifier.padding(end = 8.dp),
-                    text = selectedOption.price,
+                    text = formatPrice(selectedOption.price),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
             }
         }
     }
+}
+
+fun formatPrice(price: Double): String {
+    val formatter = NumberFormat.getCurrencyInstance(Locale.GERMANY)
+    return formatter.format(price)
 }
 
 @Preview(showBackground = true)
@@ -688,16 +696,16 @@ fun BookingSelectVehiclePreview() {
                     // Fake UI models for the preview
                     VehicleUiModel(
                         "1",
-                        "Taxi Fixed Price",
-                        "in 1 min • 4 seats",
-                        "€16.60",
+                        R.string.taxi_xl,
+                        "in 1 min · 4 seats",
+                        16.60,
                         R.drawable.img_taxi
                     ),
                     VehicleUiModel(
                         "2",
-                        "Taxi XL",
-                        "in 3 min • 6 seats",
-                        "€22.50",
+                        R.string.taxi_xl,
+                        "in 3 min · 6 seats",
+                        22.50,
                         R.drawable.img_taxi
                     )
                 ),
@@ -721,9 +729,9 @@ fun BookingConfirmRidePreview() {
                 vehicleOptions = listOf(
                     VehicleUiModel(
                         "1",
-                        "Taxi Fixed Price",
-                        "in 1 min • 4 seats",
-                        "€16.60",
+                        R.string.taxi_fixed_price,
+                        "in 1 min · 4 seats",
+                        16.60,
                         R.drawable.img_taxi
                     )
                 ),
@@ -747,9 +755,9 @@ fun BookingRideBookedPreview() {
                 vehicleOptions = listOf(
                     VehicleUiModel(
                         "1",
-                        "Taxi Fixed Price",
-                        "in 1 min • 4 seats",
-                        "€16.60",
+                        R.string.taxi_fixed_price,
+                        "in 1 min · 4 seats",
+                        16.60,
                         R.drawable.img_taxi
                     )
                 ),

@@ -12,6 +12,7 @@ import dev.guillemdiaz.freenowdemo.core.data.repository.VehicleRepository
  */
 @Module
 @InstallIn(SingletonComponent::class)
+@Suppress("unused")
 abstract class DataModule {
 
     /**

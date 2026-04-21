@@ -34,4 +34,9 @@
     <string name="destination">Destination</string>
     <string name="confirm_ride">Confirm your ride</string>
     <string name="back_to_selection">Back to selection</string>
+    <string name="taxi_fixed_price">Taxi Fixed Price</string>
+    <string name="taxi_xl">Taxi XL</string>
+    <string name="taxi_green">Taxi Green</string>
+    <string name="eta_subtitle">in %1$d min · %2$d seats</string>
+    <string name="driver">driver</string>
 </resources>

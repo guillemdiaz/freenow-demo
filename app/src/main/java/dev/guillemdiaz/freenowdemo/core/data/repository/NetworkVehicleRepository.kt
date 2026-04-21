@@ -22,6 +22,9 @@ class NetworkVehicleRepository @Inject constructor(private val apiService: Vehic
         try {
             val response = apiService.getVehicles()
             val vehicles = response.poiList.map { networkVehicle ->
+                // Generates fake data based on the ID or type
+                val isXl = networkVehicle.fleetType == "TAXI_XL" || networkVehicle.id.endsWith("2")
+
                 Vehicle(
                     id = networkVehicle.id,
                     latitude = networkVehicle.coordinate.latitude,
@@ -29,8 +32,11 @@ class NetworkVehicleRepository @Inject constructor(private val apiService: Vehic
                     type = when (networkVehicle.fleetType) {
                         "TAXI" -> VehicleType.TAXI
                         "RENTAL_CAR" -> VehicleType.RENTAL_CAR
-                        else -> VehicleType.TAXI // Fallback
-                    }
+                        else -> VehicleType.TAXI
+                    },
+                    etaMinutes = if (isXl) 3 else 1,
+                    maxSeats = if (isXl) 6 else 4,
+                    price = if (isXl) 21.20 else 16.60
                 )
             }
             emit(Result.Success(vehicles))

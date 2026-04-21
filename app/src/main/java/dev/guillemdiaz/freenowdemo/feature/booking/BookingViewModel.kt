@@ -113,7 +113,7 @@ class BookingViewModel @Inject constructor(
 
                     is Result.Success -> {
                         val uiOptions = result.data.mapIndexed { index, vehicle ->
-                            vehicle.toUiModel(index)
+                            vehicle.toUiModel()
                         }
                         _state.update {
                             it.copy(
@@ -145,15 +145,16 @@ class BookingViewModel @Inject constructor(
     private fun orderRide() {
         val currentState = _state.value
         val vehicleId = currentState.selectedVehicle ?: return
-        val vehicle = currentState.vehicleOptions.find { it.id == vehicleId }
+        val domainVehicle = currentState.vehicles.find { it.id == vehicleId }
 
         analyticsTracker.trackEvent(
             eventName = "Ride_Booked",
             parameters = mapOf(
-                "vehicle_type" to (vehicle?.title ?: "Unknown"),
+                "vehicle_type" to (domainVehicle?.type?.name ?: "Unknown"),
+                "seats" to (domainVehicle?.maxSeats ?: 0),
                 "pickup" to (currentState.pickupLocation ?: "Current Location"),
                 "dropoff" to (currentState.dropoffLocation ?: "Destination"),
-                "price" to (vehicle?.price ?: "Unknown")
+                "price" to (domainVehicle?.price ?: 0.0)
             )
         )
 

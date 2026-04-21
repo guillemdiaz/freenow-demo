@@ -27,11 +27,9 @@ class FakeVehicleRepository @Inject constructor() : VehicleRepository {
         emit(
             Result.Success(
                 listOf(
-                    Vehicle("taxi_1", VehicleType.TAXI, 41.39888, 2.17040),
-                    Vehicle("taxi_2", VehicleType.TAXI, 41.38935, 2.15378),
-                    Vehicle("taxi_3", VehicleType.TAXI, 41.38050, 2.16689),
-                    Vehicle("taxi_4", VehicleType.TAXI, 41.38915, 2.14933),
-                    Vehicle("taxi_5", VehicleType.TAXI, 41.39470, 2.20089)
+                    Vehicle("taxi_1", VehicleType.TAXI, 41.39888, 2.17040, 1, 4, 16.60),
+                    Vehicle("taxi_2", VehicleType.TAXI, 41.38935, 2.15378, 3, 6, 21.20), // XL Taxi
+                    Vehicle("taxi_3", VehicleType.TAXI, 41.38050, 2.17330, 1, 4, 16.60)
                 )
             )
         )
