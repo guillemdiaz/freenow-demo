@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.freenowdemo"
+    namespace = "dev.guillemdiaz.freenowdemo"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -17,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.freenowdemo"
+        applicationId = "dev.guillemdiaz.freenowdemo"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

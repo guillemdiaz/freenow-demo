@@ -32,4 +32,12 @@
     <string name="ride_confirmed">¡Viaje confirmado!</string>
     <string name="success">Éxito</string>
     <string name="driver_on_the_way">Tu %1$s está en camino. Te avisaremos cuando llegue.</string>
+    <string name="destination">Destino</string>
+    <string name="confirm_ride">Confirma tu viaje</string>
+    <string name="back_to_selection">Volver al inicio</string>
+    <string name="taxi_fixed_price">Taxi Precio Fijo</string>
+    <string name="taxi_xl">Taxi XL</string>
+    <string name="taxi_green">Taxi Verde</string>
+    <string name="eta_subtitle">en %1$d min · %2$d asientos</string>
+    <string name="driver">conductor</string>
 </resources>

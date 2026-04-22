@@ -1,4 +1,2 @@
 #!/bin/sh
-./gradlew ktlintFormat
-git add -u
 ./gradlew ktlintCheck
