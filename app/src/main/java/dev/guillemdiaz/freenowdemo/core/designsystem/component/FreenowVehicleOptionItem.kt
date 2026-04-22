@@ -27,6 +27,15 @@ import androidx.compose.ui.unit.dp
 import dev.guillemdiaz.freenowdemo.R
 import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
+/**
+ * A selectable list item representing a single vehicle option in the booking bottom sheet.
+ * @param title The localized name of the vehicle category (e.g., "Taxi Fixed Price").
+ * @param subtitle Secondary information such as ETA and seat capacity.
+ * @param price The formatted price string including currency symbols.
+ * @param iconRes The drawable resource ID for the vehicle image.
+ * @param isSelected Whether this item is currently selected by the user, triggering a border highlight.
+ * @param onClick Callback triggered when the entire row is tapped.
+ */
 @Composable
 fun FreenowVehicleOptionItem(
     modifier: Modifier = Modifier,

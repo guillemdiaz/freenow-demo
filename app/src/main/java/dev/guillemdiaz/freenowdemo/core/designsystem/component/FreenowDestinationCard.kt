@@ -31,7 +31,15 @@ import dev.guillemdiaz.freenowdemo.core.designsystem.icon.FreenowIcons
 import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
 /**
- * A card with pickup and dropoff address fields, a back navigation button and an add stop button.
+ * A rectangular card containing two [FreenowAddressTextField]s to select pickup and dropoff locations.
+ * @param pickupText The current text in the top pickup field.
+ * @param dropoffText The current text in the bottom dropoff field.
+ * @param isConfirmReady True if both fields are populated, allowing the keyboard "Done" action to trigger confirmation.
+ * @param onPickupChange Callback when the pickup text changes.
+ * @param onDropoffChange Callback when the dropoff text changes.
+ * @param onBackClick Callback when the leading back arrow is clicked.
+ * @param onAddStopClick Callback when the trailing add icon is clicked.
+ * @param onKeyboardConfirm Callback triggered when the user presses "Done" on the software keyboard while [isConfirmReady] is true.
  */
 @Composable
 fun FreenowDestinationCard(

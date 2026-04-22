@@ -174,6 +174,9 @@ class BookingViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Resets the booking flow back to its initial state when the user dismisses the success dialog.
+     */
     private fun resetBookingState() {
         _state.update {
             it.copy(

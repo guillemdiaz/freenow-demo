@@ -22,8 +22,10 @@ import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
 /**
  * A rectangular service selection card used primarily in the Booking Bottom Sheet to select a specific service.
- * @param image The drawable resource ID for the service icon. Should be cropped tightly as the image uses fixed sizing.
-*/
+ * @param title The name of the service.
+ * @param image The drawable resource ID for the service icon.
+ * @param onItemClick Callback triggered when the card is selected.
+ */
 @Composable
 fun FreenowServiceCard(modifier: Modifier = Modifier, title: String, @DrawableRes image: Int, onItemClick: () -> Unit) {
     Surface(

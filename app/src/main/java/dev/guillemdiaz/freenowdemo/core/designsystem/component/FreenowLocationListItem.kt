@@ -28,7 +28,11 @@ import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
 /**
  * A simple card used primarily in the Booking Bottom Sheet to specify location.
- * @param icon The drawable resource ID for the location icon.
+ * @param title The primary text displayed (e.g., "Home" or a street address).
+ * @param subtitle Optional secondary text displayed below the title.
+ * @param icon The drawable resource ID for the leading location icon.
+ * @param iconRotation Degrees to rotate the icon (useful for directional arrows).
+ * @param onItemClick Callback triggered when the entire row is tapped.
  */
 @Composable
 fun FreenowLocationListItem(

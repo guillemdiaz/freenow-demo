@@ -6,7 +6,8 @@ import dev.guillemdiaz.freenowdemo.feature.booking.state.VehicleUiModel
 
 /**
  * Maps a domain [Vehicle] to a [VehicleUiModel] ready for display in the UI.
- * Mapping is index-based to reflect the order returned by the API.
+ * Resolves appropriate localized string resources and formats domain data
+ * (like ETA and seat capacity) for presentation.
  */
 fun Vehicle.toUiModel(): VehicleUiModel {
     // Dynamically chooses the title based on the data

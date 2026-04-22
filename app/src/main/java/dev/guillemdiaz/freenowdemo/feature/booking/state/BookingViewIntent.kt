@@ -9,7 +9,10 @@ sealed interface BookingViewIntent {
     object SearchBarClicked : BookingViewIntent
     data class ServiceCardClicked(val serviceType: String) : BookingViewIntent
     data class SavedLocationClicked(val locationType: String) : BookingViewIntent
+
+    /** Triggered automatically when returning from the Destination screen with results */
     data class DestinationConfirmed(val pickup: String, val dropoff: String) : BookingViewIntent
+
     data object BackToSearchClicked : BookingViewIntent
     data object ConfirmRideClicked : BookingViewIntent
     data object BackToVehicleSelectionClicked : BookingViewIntent
