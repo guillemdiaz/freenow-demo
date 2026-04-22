@@ -29,9 +29,9 @@ class BookingScreenTest {
             vehicleOptions = listOf(
                 VehicleUiModel(
                     id = "1",
-                    title = "Taxi Fixed Price",
+                    titleRes = R.string.taxi_fixed_price,
                     subtitle = "in 1 min · 4 seats",
-                    price = "16.60 €",
+                    price = 16.60,
                     iconRes = R.drawable.img_taxi
                 )
             )
@@ -59,9 +59,9 @@ class BookingScreenTest {
             vehicleOptions = listOf(
                 VehicleUiModel(
                     "1",
-                    "Taxi Fixed Price",
+                    R.string.taxi_fixed_price,
                     "1 min",
-                    "16.60 €",
+                    16.60,
                     R.drawable.img_taxi
                 )
             )
@@ -107,9 +107,9 @@ class BookingScreenTest {
             vehicleOptions = listOf(
                 VehicleUiModel(
                     "1",
-                    "Taxi Fixed Price",
+                    R.string.taxi_fixed_price,
                     "1 min",
-                    "16.60€",
+                    16.60,
                     R.drawable.img_taxi
                 )
             )
