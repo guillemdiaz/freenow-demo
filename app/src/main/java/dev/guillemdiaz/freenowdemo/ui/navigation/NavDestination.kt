@@ -7,16 +7,16 @@ import kotlinx.serialization.Serializable
  * Each object holds the route string used by the NavController.
  */
 sealed interface NavDestination {
-    @kotlinx.serialization.Serializable
+    @Serializable
     data object Home : NavDestination
 
-    @kotlinx.serialization.Serializable
+    @Serializable
     data object Trips : NavDestination
 
-    @kotlinx.serialization.Serializable
+    @Serializable
     data object Wallet : NavDestination
 
-    @kotlinx.serialization.Serializable
+    @Serializable
     data object Account : NavDestination
 
     @Serializable
