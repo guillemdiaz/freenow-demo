@@ -31,6 +31,9 @@ import dev.guillemdiaz.freenowdemo.R
 
 /**
  * A transient banner that informs the user they have lost internet connectivity.
+ * Animates in from the bottom of the screen when visible.
+ * @param isVisible Determines if the banner should be currently displayed or animated out.
+ * @param onRetryClick Callback triggered when the user taps the retry button.
  */
 @Composable
 fun NoConnectionBanner(isVisible: Boolean, onRetryClick: () -> Unit, modifier: Modifier = Modifier) {

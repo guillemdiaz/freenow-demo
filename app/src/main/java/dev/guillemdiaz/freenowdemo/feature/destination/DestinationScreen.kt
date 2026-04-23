@@ -40,8 +40,14 @@ import dev.guillemdiaz.freenowdemo.feature.destination.state.DestinationViewInte
 import dev.guillemdiaz.freenowdemo.feature.destination.state.DestinationViewState
 
 /**
- * Screen allowing the user to set pickup and dropoff destinations, choose a location on
- * the map or select from saved locations.
+ * Stateless UI representation of the Destination search feature.
+ * Reacts entirely to the provided [DestinationViewState] and delegates all user interactions back up via the
+ * [onIntent] callback.
+ * @param isOffline Toggles the offline warning banner over the screen.
+ * @param state The current snapshot of the UI to render.
+ * @param onIntent Callback to emit user actions to the ViewModel.
+ * @param onBackClick Callback triggered when the user clicks the back arrow.
+ * @param onAddStopClick Callback triggered to add a multi-stop destination (currently stubbed).
  */
 @Composable
 fun DestinationScreen(

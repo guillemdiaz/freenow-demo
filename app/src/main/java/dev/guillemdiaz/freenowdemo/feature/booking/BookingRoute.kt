@@ -15,7 +15,12 @@ import kotlinx.coroutines.delay
 /**
  * Smart wrapper for [BookingScreen] that owns the ViewModel, collects state,
  * handles one-off navigation effects, and receives the destination handshake via
- * SavedStateHandle
+ * [SavedStateHandle]
+ * @param isOffline Indicates if the app has lost network connectivity.
+ * @param savedStateHandle Used to receive results (pickup/dropoff) from the Destination flow.
+ * @param onShowBottomBar Callback to toggle bottom navigation visibility.
+ * @param onNavigateToDestination Callback to route the user to the destination search screen.
+ * @param viewModel The Hilt-injected state holder for this feature.
  */
 @Suppress("ParamsComparedByRef")
 @Composable

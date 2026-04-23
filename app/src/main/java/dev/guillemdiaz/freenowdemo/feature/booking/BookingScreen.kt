@@ -92,8 +92,12 @@ private const val DEFAULT_ZOOM = 13f
 private const val VEHICLE_ZOOM = 17f
 
 /**
- * Main booking screen that combines a Google Map with a draggable bottom sheet.
- * The sheet peeks at a fixed height, allowing the user to drag it up to cover the map.
+ * Stateless UI representation of the Booking feature.
+ * Reacts entirely to the provided [BookingViewState] and delegates all user interactions back up via the [onIntent]
+ * callback.
+ * @param isOffline Toggles the offline warning banner.
+ * @param state The current snapshot of the UI to render.
+ * @param onIntent Callback to emit user actions to the ViewModel.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.Flow
 interface VehicleRepository {
     /**
      * Fetches a list of available vehicles in the user's area.
-     * Throws an exception if the network fails.
+     * Emits [Result.Loading] immediately, followed by either [Result.Success]
+     * with the domain models or [Result.Error] if the network request fails.
      */
     suspend fun getVehicles(): Flow<Result<List<Vehicle>>>
 }

@@ -28,6 +28,11 @@ import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
 /**
  * A single-line text field with a leading icon, placeholder and themed cursor for address input.
+ * @param value The current text to display.
+ * @param onValueChange Callback triggered when the user types.
+ * @param placeholderText Text to display when [value] is empty.
+ * @param leadingIcon Drawable resource ID for the icon shown at the start of the field.
+ * @param leadingIconTint The color applied to the leading icon.
  */
 @Composable
 fun FreenowAddressTextField(

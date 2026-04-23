@@ -10,7 +10,9 @@ import dev.guillemdiaz.freenowdemo.core.network.NetworkMonitor
 import jakarta.inject.Inject
 
 /**
- * Single activity that hosts the entire app.
+ * Primary entry point for the application, implementing the Single Activity Architecture.
+ * Responsible for initializing the Jetpack Compose UI graph and providing top-level
+ * injected dependencies (like [NetworkMonitor]) to the [FreenowApp] composable.
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

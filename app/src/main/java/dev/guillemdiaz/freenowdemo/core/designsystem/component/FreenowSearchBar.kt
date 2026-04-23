@@ -27,6 +27,7 @@ import dev.guillemdiaz.freenowdemo.core.designsystem.theme.FreenowTheme
 
 /**
  * A circle-shaped bar used primarily in the Booking Bottom Sheet to search for a destination.
+ * @param onItemClick Callback triggered when the user taps anywhere on the search bar to initiate a search.
  */
 @Composable
 fun FreenowSearchBar(modifier: Modifier = Modifier, onItemClick: () -> Unit) {

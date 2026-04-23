@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 
 /**
  * Represents a top-level navigation destination shown in the bottom navigation bar.
- *
  * @param destination The nav destination this item navigates to
  * @param icon Drawable resource for the unselected state
  * @param selectedIcon Drawable resource for the selected state

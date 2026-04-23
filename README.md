@@ -1,118 +1,69 @@
 # Freenow Demo
+A fully functional Android application built as a technical showcase, directly inspired by the 
+**Freenow** app.
 
-A demo Android app inspired by Freenow booking flow.
-This project was built to demonstrate modern Android development practices, 
-emphasizing a strict **MVI architecture** and reactive UI with **Jetpack Compose**.
+While it's not an exact clone, this demo demonstrates how to structure a modern, scalable 
+Android app. It’s written entirely in Kotlin with Jetpack Compose, utilizing a MVI (Model-View-Intent) architecture, 
+Unidirectional Data Flow (UDF), and offline-first design.
 
-> **🚧 Project Status: Work in progress** 
-> <br>*This project is currently under development. Below is
-> the roadmap of completed and upcoming features.*
->
-> - [x] **Infrastructure:** Hilt, ktlint, GitHub Actions CI, etc.
-> - [x] **UI shell:** Material 3 theming, Navigation Bar, Bottom Sheet Scaffold, Maps compose, etc.
-> - [x] **Core architecture (MVI):** Unidirectional Data flow using StateFlow and Channels.
-> - [x] **Networking & Maps:** Retrofit integration with GitHub Gist mock API, rendering different 
->       vehicles on `maps-compose`.
-> - [x] **Graceful degradation:** MVI Offline toggle with a custom connection Dialog and 
->       Lottie loading states.
-> - [x] **Destination flow:** Built the Destination screen with form validation, custom text
-    >       inputs, and a `SavedStateHandle` navigation handshake back to the map.
-> - [ ] **Booking confirmation:** Synchronizing the Bottom Sheet UI with Google Maps camera
-    >       animations and handling the final booking state. *(Currently working on this)*
-> - [ ] **Polish & tests:** Coroutine Unit Tests for the ViewModel, AnalyticsTracker injection, etc.
+## UI & Interactive Flows
+The UI is built using Jetpack Compose and Material 3, featuring adaptive bottom sheets and 
+Google Maps camera synchronization, among others.
+
+> [!NOTE]  
+> The demo supports Dark mode and Dynamic Theming
+
+### Screenshots
+![Light Theme Showcase](docs/screenshots/light_showcase.png)
+
+![Dark Theme Showcase](docs/screenshots/dark_showcase.png)
 
 ## Architecture
+This app follows official Android architecture guidance, separating concerns into discrete layers 
+to ensure scalability and testability.
 
-The app follows a Unidirectional Data Flow (UDF) alongside a Model-View-Intent (MVI) 
-pattern. The project structure is inspired by Google's `Now in Android` (NiA) architecture 
-guidelines, separating `core` utilities from `feature` layers.
+* **Presentation Layer:** Strictly stateless Jetpack Compose screens that react to `ViewState` 
+  emissions.
+* **ViewModel Layer:** Manages state via `StateFlow` and handles one-off navigation/dialog 
+  events using Kotlin `Channel`s to prevent dropped events during configuration changes.
+* **Data & Domain Layer:** Repositories expose reactive `Flow<Result<T>>` streams, ensuring the 
+  UI is entirely decoupled from the network data mapping logic.
 
-![Architecture Diagram](docs/mvi_architecture_diagram.png)
-> *Note: This diagram reflects the initial version of the demo. It will be updated upon project 
-> completion to reflect the final multi-screen route refactor and cross-screen state handling.*
+## Testing Infrastructure
+To guarantee the stability of the MVI pipeline, this project implements tests adhering to modern 
+Android standards:
 
-## Features
+* **JVM Unit Tests (`test`):** Validates ViewModel logic, state conflation, and side-effect 
+  emissions using `kotlinx-coroutines-test` and CashApp's `Turbine`.
+* **Instrumented UI Tests (`androidTest`):** Mounts Compose nodes in isolation using 
+  `createAndroidComposeRule`. Tests verify dynamic UI states, physical click callbacks, and 
+  proper localized string resolutions without relying on manual QA.
 
-- Native support for English and Spanish (values-es).
-- Graceful offline degradation and error handling.
-- Accessibility support.
-- Analytics (ready for Mixpanel/Braze).
-- Modern Compose animations (Lottie)
+## Tech Stack
+| Layer                    | Technology                                    |
+|--------------------------|-----------------------------------------------|
+| **UI**                   | Jetpack Compose, Material 3, Edge-to-Edge     |
+| **State Management**     | MVI, ViewModel, StateFlow, Coroutines         |
+| **Dependency Injection** | Hilt                                          |
+| **Networking**           | Retrofit, OkHttp, `kotlinx-serialization`     |
+| **Maps & Location**      | Google Maps Compose (`maps-compose`)          |
+| **Animations**           | Lottie Compose                                |
+| **Testing**              | JUnit 4, Turbine, Compose UI Test             |
+| **CI/CD & Formatting**   | GitHub Actions, Fastlane, `ktlint`, Git Hooks |
 
-## Screenshots
-
-### Booking & State Handling
-|           | Booking Screen                                              | Offline Dialog                                              |
-|-----------|-------------------------------------------------------------|-------------------------------------------------------------|
-| **Light** | ![Light Booking](docs/screenshots/light_booking_screen.png) | ![Light Offline](docs/screenshots/light_offline_dialog.png) |
-| **Dark**  | ![Dark Booking](docs/screenshots/dark_booking_screen.png)   | ![Dark Offline](docs/screenshots/dark_offline_dialog.png)   |
-
-### Interactive Flows
-|           | Loading map                                                  | Drag Handle                                               |
-|-----------|--------------------------------------------------------------|-----------------------------------------------------------|
-| **Light** | <img src="docs/screenshots/lottie_loading.gif" width="350"/> | <img src="docs/screenshots/drag_handle.gif" width="350"/> |
-
-### Destination Flow
-|           | Destination Screen                                                  | Validated Form                                                    |
-|-----------|---------------------------------------------------------------------|-------------------------------------------------------------------|
-| **Light** | ![Light Destination](docs/screenshots/light_destination_screen.png) | <img src="docs/screenshots/destination_filling.gif" width="350"/> |
-| **Dark**  | ![Dark Destination](docs/screenshots/dark_destination_screen.png)   |                                                                   |
-
-
-## Tech stack
-
-| Layer                | Technology                                |
-|----------------------|-------------------------------------------|
-| UI                   | Jetpack Compose, Material 3               |
-| State Management     | ViewModel, StateFlow, Coroutines          |
-| Dependency Injection | Hilt                                      |
-| Networking           | Retrofit, OkHttp, `kotlinx-serialization` |
-| Animations           | Lottie Compose                            |
-| Testing              | JUnit, Coroutine Test *(Upcoming)*        |
-| CI/CD                | GitHub Actions, Fastlane                  |
-| Maps                 | Google Maps Compose (`maps-compose`)      |
-| Code Style           | ktlint                                    |
-
-## Getting started
-
+## Getting Started
 ### Prerequisites
+* Android Studio (Latest Stable)
+* Min SDK: 26 (Android 8.0)
 
-- Min SDK: 26
+### Setup Instructions
+1. Clone the repository.
+2. Add your Google Maps API key to the `local.properties` file in the root directory:
 
-### Setup
-
-1. Clone the repository
-2. Open the project in Android Studio
-3. Add your Google Maps API key to `local.properties` file in the root directory:
-```properties
-MAPS_API_KEY=your_key_here
-```
-4. Run the app
-
-## Project structure
-
-```
-app/src/main/java/com/example/freenowdemo/
-├── core/
-│   ├── analytics/
-│   ├── data/
-│   ├── designsystem/
-│   ├── model/
-│   └── network/
-├── feature/
-│   └── booking/
-└── ui/
-    ├── components/
-    └── navigation/
-```
-
-## CI/CD
-
-GitHub Actions runs on every pull request:
-- ktlint formatting check
-- Unit tests
-Fastlane is configured with lanes for automated testing and APK assembly.
+   ```properties
+   MAPS_API_KEY=your_google_maps_api_key_here
+   ```
+3. Sync the Gradle project and hit Run on the app configuration.
 
 ## License
-
-For demo purposes only.
+This project is for demonstration and portfolio purposes only.
